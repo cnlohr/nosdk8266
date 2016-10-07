@@ -4,7 +4,6 @@
 #include "eagle_soc.h"
 #include "ets_sys.h"
 #include "gpio.h"
-#include "useful/phy_info.h"
 
 static void my_intr( void * id )
 {
