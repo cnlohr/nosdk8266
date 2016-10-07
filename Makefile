@@ -11,7 +11,7 @@ PREFIX:=$(GCC_FOLDER)/bin/xtensa-lx106-elf-
 OBJDUMP:=$(PREFIX)objdump
 OBJCOPY:=$(PREFIX)objcopy
 GCC:=$(PREFIX)gcc
-CFLAGS:=-mlongcalls -Os -Iinclude -nostdlib -DMAIN_MHZ=52
+CFLAGS:=-mlongcalls -Os -Iinclude -nostdlib -DMAIN_MHZ=80
 LDFLAGS:=-T linkerscript.ld -T addresses.ld
 
 FOLDERPREFIX:=$(GCC_FOLDER)/bin

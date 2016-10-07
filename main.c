@@ -6,12 +6,10 @@
 #include "gpio.h"
 #include "useful/phy_info.h"
 
-void rom_rfpll_set_freq( int i, int k, int l );
-
-static void my_intr( uint32 intr_mask, void * id )
+static void my_intr( void * id )
 {
 	GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(0));
-	printf( "INTERRUPT %d %p\n", intr_mask, id );
+	printf( "INTERRUPT\n" );
 }
 
 void SetupGPIOInterrupt()
@@ -19,7 +17,7 @@ void SetupGPIOInterrupt()
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U,FUNC_GPIO0);
 	PIN_DIR_INPUT = _BV(0); //GPIO 0 Button is input
 	GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, BIT(0));
-	ETS_GPIO_INTR_ATTACH( my_intr, 0xaaaa0000 );
+	ETS_GPIO_INTR_ATTACH( my_intr, 0 );
 	gpio_pin_intr_state_set(GPIO_ID_PIN(0),GPIO_PIN_INTR_POSEDGE);  //Rising Edge Trigger.
 	ETS_GPIO_INTR_ENABLE();
 	printf( "GPIO Interrupt setup.\n" );
