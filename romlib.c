@@ -21,11 +21,19 @@ void set_pll(void)
 	}
 }
 
+extern uint32_t _bss_start;
+extern uint32_t _bss_end;
+
 void romlib_init()
 {
+	uint32_t *addr;
+
 	ets_update_cpu_frequency( MAIN_MHZ );
 	rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL to 80 MHz.
+
+    for (addr = &_bss_start; addr < &_bss_end; addr++)
+        *addr = 0;
 
 	PIN_PULLUP_DIS(PERIPHS_IO_MUX_U0TXD_U);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);
