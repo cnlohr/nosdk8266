@@ -13,11 +13,14 @@ OBJCOPY:=$(PREFIX)objcopy
 GCC:=$(PREFIX)gcc
 
 
+#Non-PIOC66 mode (Regular, 80 MHz, etc.)
 #CFLAGS:=-mlongcalls -Os -Iinclude -nostdlib -DMAIN_MHZ=80 -flto
-#If you want an absolutely strip down environment (For the HaD 1kB challenge)
 
+
+#PICO66 Mode... If you want an absolutely strip down environment (For the HaD 1kB challenge)
 PRINTOK:=-DPICONOPRINT
 CFLAGS:=-mlongcalls -Os -Iinclude -nostdlib -DMAIN_MHZ=52 -flto -DPICO66 $(PRINTOK) -mno-serialize-volatile
+
 
 #-mno-serialize-volatile will prevent extra memw things from being generated.
 
