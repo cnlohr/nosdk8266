@@ -9,6 +9,23 @@ extern UartDevice UartDev;
 
 #define	sys_const_crystal_26m_en	48	// soc_param0: 0: 40MHz, 1: 26MHz, 2: 24MHz
 
+volatile uint32_t * PIN_BASE = (volatile uint32_t *)0x60000300;
+volatile uint32_t * IO_BASE = (volatile uint32_t *)0x60000000;
+
+
+#ifdef PICO66
+
+extern uint32_t _bss_start;
+extern uint32_t _bss_end;
+void romlib_init() {
+	uint32_t *addr = &_bss_start;
+	for (addr = &_bss_start; addr < &_bss_end; addr++)  *addr = 0; //Safe, _bss_start doesn't have to == _bss_end
+	//do{*(addr++) = 0;}while( addr < &_bss_end ); //Saves ~4 bytes if _bss_start!=_bss_end
+	uart_div_modify(UART0, (MAIN_MHZ*1000000)/115200);
+}
+
+#else
+
 //Thanks, https://github.com/pvvx/esp8266web/blob/2e25559bc489487747205db2ef171d48326b32d4/app/sdklib/system/app_main.c
 void set_pll(void)
 {
@@ -38,8 +55,7 @@ void romlib_init()
 	PIN_PULLUP_DIS(PERIPHS_IO_MUX_U0TXD_U);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);
 	uart_div_modify(UART0, (MAIN_MHZ*1000000)/115200);
-
-	//Is this needed?
-	gpio_init();
 }
+
+#endif
 

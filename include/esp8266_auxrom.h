@@ -20,22 +20,34 @@ void ets_delay_us( uint32_t us );
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#define PIN_OUT       ( *((uint32_t*)0x60000300) )
-#define PIN_OUT_SET   ( *((uint32_t*)0x60000304) )
-#define PIN_OUT_CLEAR ( *((uint32_t*)0x60000308) )
-#define PIN_DIR       ( *((uint32_t*)0x6000030C) )
-#define PIN_DIR_OUTPUT ( *((uint32_t*)0x60000310) )
-#define PIN_DIR_INPUT ( *((uint32_t*)0x60000314) )
-#define PIN_IN        ( *((volatile uint32_t*)0x60000318) )
+//This is done a little differently than we normally do it.  That's so GCC can figure out how to
+//re-use the PIN_BASE address.
+
+extern volatile uint32_t * PIN_BASE;
+extern volatile uint32_t * IO_BASE;
+
+#define PIN_OUT       ( PIN_BASE[0] )
+#define PIN_OUT_SET   ( PIN_BASE[1] )
+#define PIN_OUT_CLEAR ( PIN_BASE[2] )
+#define PIN_DIR       ( PIN_BASE[3] )
+#define PIN_DIR_OUTPUT (PIN_BASE[4] )
+#define PIN_DIR_INPUT ( PIN_BASE[5] )
+#define PIN_IN        ( PIN_BASE[6] )
 #define _BV(x) ((1)<<(x))
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void gpio_init(void);
+#ifdef PICONOPRINT
+#define ets_putc( c  )
+#define uart_div_modify( u, d )
+#define printf(x...)
+#define putc(c)		
+#else
 void ets_putc( char c );
 void uart_div_modify( int uart, int divisor );
 #define putc ets_putc
 #define printf ets_uart_printf
+#endif
 
 //Part of the romlib
 void romlib_init();
