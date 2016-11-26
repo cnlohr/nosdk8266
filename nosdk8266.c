@@ -17,8 +17,11 @@ volatile uint32_t * IOMUX_BASE = (volatile uint32_t *)0x60000800;
 volatile uint32_t * SPI0_BASE = (volatile uint32_t *)0x60000200;
 volatile uint8_t  * RTCRAM = (volatile uint8_t *)0x60001000; //Pointer to RTC Ram (1024 bytes)
 
-#ifndef PICO66
-
+#ifdef PICO66
+#define t_ets_update_cpu_frequency(x)
+#else
+#define t_ets_update_cpu_frequency ets_update_cpu_frequency
+#endif
 
 //Thanks, https://github.com/pvvx/esp8266web/blob/2e25559bc489487747205db2ef171d48326b32d4/app/sdklib/system/app_main.c
 static void set_pll(void)
@@ -28,7 +31,7 @@ static void set_pll(void)
 		//if(get_sys_const(sys_const_crystal_26m_en) == 1) { // soc_param0: 0: 40MHz, 1: 26MHz, 2: 24MHz
 	//Switch to 80 first.
 
-	rom_i2c_writeReg(103,4,1,136);
+	pico_i2c_writereg(103,4,1,136);
 
 	//	... Looks like the main PLL operates at 1040 MHz
 	//	If the divisor is <9, it seems the chip cannot boot on its own, without reboot.
@@ -55,17 +58,45 @@ static void set_pll(void)
 	//Not sure why.
 	//
 	//ESP8285, when operating at divisors less than 6 seems to go to close to 5, and will boot, but never reaches 5.
+
+	//XXX TODO: Further tuning if we change the 3rd parameter to 4???
 #if PERIPH_FREQ == 115
-	rom_i2c_writeReg(103,4,2,0x11);
+	pico_i2c_writereg(103,4,2,0x11);
 #elif PERIPH_FREQ == 173
-	rom_i2c_writeReg(103,4,2,0xa1);
+	pico_i2c_writereg(103,4,2,0xa1);
 #elif PERIPH_FREQ == 189
-	rom_i2c_writeReg(103,4,2,0x81);
+	pico_i2c_writereg(103,4,2,0x81);
 #else
 	// set 80MHz PLL CPU
-	rom_i2c_writeReg(103,4,2,145);
+	pico_i2c_writereg(103,4,2,145);
 #endif
 }
+
+void setup_clock()
+{
+#if MAIN_MHZ == 52
+	t_ets_update_cpu_frequency( 52 );
+#elif MAIN_MHZ == 104
+	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
+	t_ets_update_cpu_frequency( 104 );
+#elif MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 173 || MAIN_MHZ==189
+	rom_rfpll_reset();	//Reset PLL.
+	set_pll();			//Set PLL
+	HWREG(DPORT_BASEADDR,0x14) &= 0x7E; //Regular clock bit.
+ 	t_ets_update_cpu_frequency(80);
+#elif MAIN_MHZ == 160 || MAIN_MHZ == 231 || MAIN_MHZ == 346 || MAIN_MHZ==378 //Won't boot at 378 MHz.
+	rom_rfpll_reset();	//Reset PLL.
+	set_pll();			//Set PLL
+	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
+	t_ets_update_cpu_frequency(160);
+#else
+	#error System MHz must be 52, 80, 120, 160 or 240
+#endif
+
+}
+
+
+#ifndef PICO66
 
 extern uint32_t _bss_start;
 extern uint32_t _bss_end;
@@ -73,25 +104,7 @@ extern uint32_t _bss_end;
 void romlib_init()
 {
 	uint32_t *addr;
-
-#if MAIN_MHZ == 52
-	ets_update_cpu_frequency( 52 );
-#elif MAIN_MHZ == 104
-	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
-	ets_update_cpu_frequency( 104 );
-#elif MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 173 || MAIN_MHZ==189
-	rom_rfpll_reset();	//Reset PLL.
-	set_pll();			//Set PLL
-	HWREG(DPORT_BASEADDR,0x14) &= 0x7E; //Regular clock bit.
- 	ets_update_cpu_frequency(80);
-#elif MAIN_MHZ == 160 || MAIN_MHZ == 231 || MAIN_MHZ == 346 || MAIN_MHZ==378 //Won't boot at 378 MHz.
-	rom_rfpll_reset();	//Reset PLL.
-	set_pll();			//Set PLL
-	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
-	ets_update_cpu_frequency(160);
-#else
-	#error System MHz must be 52, 80, 120, 160 or 240
-#endif
+	setup_clock();
 
     for (addr = &_bss_start; addr < &_bss_end; addr++)
         *addr = 0;

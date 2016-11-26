@@ -11,8 +11,32 @@ delay4clk:
 	bnez a2, delay4clk
 	ret.n
 
-#ifdef PICO66
+//Look-alike function to rom_i2c_writeReg
+.global pico_i2c_writereg
+pico_i2c_writereg:
+	slli	a8, a5, 16
+	slli	a7, a4, 8
+	movi	a9, 0x60000a00
+	or	a7, a7, a8
+	movi	a8, 0x01000000
+	or	a7, a2, a7
+	or	a7, a7, a8
+	slli	a8, a3, 2
+	add.n	a2, a8, a9
+	memw
+	s32i	a7, a2, 0x300
+	memw
+	l32i	a6, a2, 0x300
+	bbci	a6, 25, _term_pico
+_reloop_pico:
+	memw
+	l32i	a9, a2, 0x300
+	bbsi	a9, 25, _reloop_pico
+_term_pico:
+	ret.n
 
+
+#ifdef PICO66
 
 #else
 

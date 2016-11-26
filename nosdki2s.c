@@ -108,8 +108,7 @@ void InitI2S()
 
 	//Enable clock to i2s subsystem
 	//i2c_writeReg_Mask_def(i2c_bbpll, i2c_bbpll_en_audio_clock_out, 1);
-	i2c_writeReg_Mask_def(i2c_bbpll, i2c_bbpll_en_audio_clock_out, 1);
-	//rom_i2c_writeReg(i2c_bbpll,i2c_bbpll_hostid,7,4);
+	//i2c_writeReg_Mask_def(i2c_bbpll, i2c_bbpll_en_audio_clock_out, 1);
 
 	//rom_i2c_writeReg(i2c_bbpll, 0x02000093); //Interesting: this crashes the proc. (so does 0x0100000...)
 	//rom_i2c_writeReg(i2c_bbpll, 0x0000400); //Interesting: sets output to 0x19 (so does 0x200)
@@ -118,7 +117,16 @@ void InitI2S()
 
 //  rom_i2c_writeReg_Mask(i2c_bbpll, 4,  4,  7,  7,  1);
 
-	printf( "READREG: %08x\n", rom_i2c_readReg( i2c_bbpll ) );
+	//From 13 to 93.
+	pico_i2c_writereg(103,4,4,0x93);
+
+/*
+#define i2c_bbpll_en_audio_clock_out            4
+#define i2c_bbpll_en_audio_clock_out_msb        7
+#define i2c_bbpll_en_audio_clock_out_lsb        7
+*/
+
+	printf( "READREG: %08x\n", rom_i2c_readReg( i2c_bbpll, 4, 4 ) );
 
 	//Reset I2S subsystem
 	//CLEAR_PERI_REG_MASK(I2SCONF,I2S_I2S_RESET_MASK);  //Not needed.

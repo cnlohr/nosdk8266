@@ -3,6 +3,7 @@
 
 #include "esp8266_rom.h"
 #include "eagle_soc.h"
+#include "nosdk8266.h"
 
 //Functions you'll call:
 void InitI2S();

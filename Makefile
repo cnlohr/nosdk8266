@@ -14,7 +14,7 @@ all : $(TARGET_OUT)
 # ROM functions.
 
 #BUILD:=PICO
-BUILD:=REGULAR
+BUILD:=PICO
 MAIN_MHZ:=346  #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
 
 
@@ -62,8 +62,9 @@ $(TARGET_OUT) : $(SRCS)
 	PATH=$(FOLDERPREFIX):$$PATH;$(ESPTOOL_PY) elf2image $(TARGET_OUT) 
 
 burn : $(FW_FILE_1) $(FW_FILE_2)
-	($(ESPTOOL_PY) --port $(PORT)  write_flash 0x00000 image.elf-0x00000.bin -ff 80m -fm dout)||(true)
+	($(ESPTOOL_PY) --port $(PORT) write_flash 0x00000 image.elf-0x00000.bin -ff 80m -fm dout)||(true)
 	sleep .1
+	($(ESPTOOL_PY) --port $(PORT) run)||(true)
 
 clean :
 	rm -rf $(TARGET_OUT) image.map image.lst $(FW_1) $(FW_2)

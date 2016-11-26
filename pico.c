@@ -26,19 +26,15 @@ int call_user_start()
 	//This handles zeroin'g the BSS RAM, as well as setting up the serial prot to 115k Baud
 	uint32_t *addr = &_bss_start;
 	for (addr = &_bss_start; addr < &_bss_end; addr++)  *addr = 0; //Safe, _bss_start doesn't have to == _bss_end
-	uart_div_modify(UART0, (MAIN_MHZ*1000000)/115200);
-
-
-#if MAIN_MHZ == 80 || MAIN_MHZ == 160
-	#error This is PICO mode.  Cannot set to 80 or 160 MHz.
-#elif MAIN_MHZ == 52
-	//52 MHz, no operation needed.
-#elif MAIN_MHZ == 104
-	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
-#endif
+	setup_clock();
+	uart_div_modify(UART0, (PERIPH_MHZ*1000000)/115200);
 
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U,FUNC_GPIO2);
 	PIN_DIR_OUTPUT = _BV(2); //Enable GPIO2 light off.
+
+	InitI2S();
+
+	SendI2S();
 
 	while(1)
 	{

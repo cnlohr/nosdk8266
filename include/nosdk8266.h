@@ -42,5 +42,13 @@ extern volatile uint8_t  * RTCRAM; //Pointer to RTC Ram (1024 bytes)
 void nosdk8266_init();
 
 
+#ifndef PICO66
+#define pico_i2c_writereg rom_i2c_writeReg
+void rom_i2c_writeReg( int reg, int hosid, int par, int val ); 
+#else
+void pico_i2c_writereg( int reg, int hosid, int par, int val ); 
+#endif
+
+
 #endif
 
