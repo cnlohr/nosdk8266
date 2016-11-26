@@ -22,7 +22,7 @@ PICO Code-size-table (with USE_PRINT disabled) as of 755c743de4d430a6a1b3ee2c11e
 | 378 MHz | 464+32 | 244+8 | Runs slower on ESP8285. | ~189 MHz | **YES** |
 
 
-Interestingly, you might notice that the way this works is with a 1040 MHz.
+Interestingly, you might notice that the way this works is with a 1040 MHz high speed PLL clock and divides from that.
 
 ## Additional Remarks
 
