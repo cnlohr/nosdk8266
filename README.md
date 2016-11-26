@@ -56,6 +56,10 @@ Cleaning, building and burning should only take about two seconds.  Yes, that me
 
 All PLL settings are hard-coded for a 26 MHz external crystal.  This is probaly okay because almost everyone uses this.  However, it does mean you cannot use this project with any other crystals that are compatible with the ESP (i.e. 40 MHz crystals).
 
+## Credits
+
+A large portion of figuring out what's what was done by @pvvx, over at  his [esp8266web](https://github.com/pvvx/esp8266web/) repository.  Additionally, some of the header files are still licensed Espressif.  So, don't let the MIT license on the overarching project confuse you.
+
 # Todo
 
 Find out why -fwhole-program dosen't work.  It could reduce overhead of function calls.
