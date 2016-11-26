@@ -1,7 +1,4 @@
 TARGET_OUT = image.elf
-FW_1 = image.elf-0x10000.bin
-FW_2 = image.elf-0x00000.bin
-
 all : $(TARGET_OUT)
 
 #First, select whether you are targeting PICO or REGULAR.
@@ -19,12 +16,14 @@ MAIN_MHZ:=189  #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378
 USE_I2S:=YES
 #USE_PRINT:=YES
 
+ESP_OPEN_SDK:=~/esp8266/esp-open-sdk
 
 
 
-
-GCC_FOLDER:=~/esp8266/esp-open-sdk/xtensa-lx106-elf
-ESPTOOL:=~/esp8266/esptool/esptool.py
+FW_1 = image.elf-0x10000.bin
+FW_2 = image.elf-0x00000.bin
+GCC_FOLDER:=$(ESP_OPEN_SDK)/xtensa-lx106-elf
+ESPTOOL:=$(ESP_OPEN_SDK)/esptool/esptool.py
 ESPTOOLOPTS:=-b 115200
 PREFIX:=$(GCC_FOLDER)/bin/xtensa-lx106-elf-
 SIZE:=$(PREFIX)size
