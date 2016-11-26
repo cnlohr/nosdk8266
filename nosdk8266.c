@@ -4,7 +4,6 @@
 #include <ets_sys.h>
 #include "nosdk8266.h"
 
-#define UART0 0
 
 extern UartDevice UartDev;
 

@@ -38,6 +38,9 @@ extern volatile uint8_t  * RTCRAM; //Pointer to RTC Ram (1024 bytes)
 
 #define HWREG(BASE, OFF)       BASE[OFF>>2]
 
+
+#define UART0 0
+
 //Sets clock frequency, PLL and initializes BSS.
 void nosdk8266_init();
 

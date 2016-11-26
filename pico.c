@@ -30,7 +30,7 @@ int main()
 	nosdk8266_clock();
 #endif
 
-	uart_div_modify(UART0, (PERIPH_MHZ*1000000)/115200);  //Code will not be emitted unless printing is turned on.
+	uart_div_modify(UART0, (PERIPH_FREQ*1000000)/115200);  //Code will not be emitted unless printing is turned on.
 
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U,FUNC_GPIO2);
 	PIN_DIR_OUTPUT = _BV(2); //Enable GPIO2 light off.

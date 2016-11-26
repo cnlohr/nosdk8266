@@ -15,8 +15,12 @@ all : $(TARGET_OUT)
 
 BUILD:=PICO
 #BUILD:=REGULAR
-MAIN_MHZ:=52  #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
-#USE_I2S:=YES
+MAIN_MHZ:=80  #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
+USE_I2S:=YES
+#USE_PRINT:=YES
+
+
+
 
 
 GCC_FOLDER:=~/esp8266/esp-open-sdk/xtensa-lx106-elf
@@ -34,21 +38,27 @@ LDFLAGS:=-T linkerscript.ld -T addresses.ld
 FOLDERPREFIX:=$(GCC_FOLDER)/bin
 PORT:=/dev/ttyUSB0
 
-
 ifeq (REGULAR, $(BUILD))
 	#Non-PIOC66 mode (Regular, 80 MHz, etc.)
-	PRINTOK:=
 	CFLAGS:=-mlongcalls -flto
 	SRCS:=main.c
 else ifeq (PICO, $(BUILD))
 	#PICO66 Mode... If you want an absolutely strip down environment (For the HaD 1kB challenge)
-	PRINTOK:=-DPICONOPRINT
-	CFLAGS:=-mlongcalls -DPICO66 $(PRINTOK) -flto
+	CFLAGS:=-mlongcalls -DPICO66 -flto
 		#TODO: Why can't we use -fwhole-program instead of -flto?
 	SRCS:=pico.c
 else
 	ERR:=$(error Need either REGULAR or PICO to be defined to BUILD.  Currently $(BUILD))
 endif
+
+
+
+ifeq (YES, $(USE_PRINT))
+	CFLAGS:=$(CFLAGS)
+else
+	CFLAGS:=$(CFLAGS) -DPICONOPRINT
+endif
+
 
 ifeq (YES, $(USE_I2S))
 	SRCS:=$(SRCS) nosdki2s.c
