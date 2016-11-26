@@ -6,6 +6,12 @@ delay4clk:
 	ret.n
 
 //Look-alike function to rom_i2c_writeReg
+#if MAIN_MHZ==52 || MAIN_MHZ==104
+
+//No pico_i2c_writereg_asm isneeded if no PLL used.
+
+#else
+
 .global pico_i2c_writereg_asm
 .align 4
 pico_i2c_writereg_asm:
@@ -30,6 +36,7 @@ pico_i2c_writereg_asm:
 .term_pico_writereg:
 	ret.n
 
+#endif
 
 #ifdef PICO66
 

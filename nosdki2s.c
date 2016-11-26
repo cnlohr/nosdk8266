@@ -1,6 +1,14 @@
 #include "nosdki2s.h"
 #include "pin_mux_register.h"
 
+#ifndef USE_I2S
+#error You need the USE_I2S feature anbled to use this.
+#endif
+
+#if MAIN_MHZ==52 || MAIN_MHZ==104
+#error You cannot operate the I2S bus without the PLL enabled. Select another clock frequency.
+#endif
+
 
 //Change these if you need!
 #define WS_I2S_BCK 1	
