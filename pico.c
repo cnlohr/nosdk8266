@@ -4,7 +4,7 @@
 #include "eagle_soc.h"
 #include "ets_sys.h"
 #include "gpio.h"
-#include "romlib.h"
+#include "nosdk8266.h"
 
 //PICO66 is ideal for running an absolutely minimal build.
 //If you want printf(...) you'll need PICOWITHPRINT and call romlib_init().

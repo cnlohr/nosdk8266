@@ -5,6 +5,7 @@
 //I have no idea if this stuff is correct!
 
 #include <c_types.h>
+#include "esp8266_auxrom.h"
 
 void Cache_Read_Disable(); //Can't seem to operate...
 void Cache_Read_Enable();
@@ -83,7 +84,7 @@ extern SpiFlashChip * flashchip; //don't forget: flashchip->chip_size = 0x010000
 
 void system_update_cpu_freq( uint8_t mhz );
 void software_reset();
-
+void ets_memcpy( void * out, const void *in, int len );
 
 
 #endif

@@ -10,19 +10,19 @@ all : $(TARGET_OUT)
 # It's ideal for the HackADay 1kB Challenge.
 # You can also run PICO at 104 MHz but it takes a couple extra bytes to set the overclocking bits.
 #
-#REGULAR Operates at 52, 80, 104 or 160 and allows for a number of
+#REGULAR Operates at a variety of frequencies and allows for a number of
 # ROM functions.
 
 #BUILD:=PICO
 BUILD:=REGULAR
-MAIN_MHZ:=52
-
+MAIN_MHZ:=346  #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
 
 
 ESPTOOL:=~/esp8266/esptool/esptool.py
 ESPTOOLOPTS:=-b 115200
 GCC_FOLDER:=~/esp8266/esp-open-sdk/xtensa-lx106-elf
 PREFIX:=$(GCC_FOLDER)/bin/xtensa-lx106-elf-
+SIZE:=$(PREFIX)size
 OBJDUMP:=$(PREFIX)objdump
 OBJCOPY:=$(PREFIX)objcopy
 GCC:=$(PREFIX)gcc
@@ -34,7 +34,6 @@ FOLDERPREFIX:=$(GCC_FOLDER)/bin
 GCC_FOLDER:=~/esp8266/esp-open-sdk/xtensa-lx106-elf
 ESPTOOL_PY:=~/esp8266/esptool/esptool.py
 PORT:=/dev/ttyUSB0
-
 
 
 ifeq (REGULAR, $(BUILD))
@@ -52,19 +51,19 @@ else
 endif
 
 
-
-SRCS:=$(SRCS) startup.S romlib.c
+SRCS:=$(SRCS) startup.S nosdk8266.c nosdki2s.c
 
 $(TARGET_OUT) : $(SRCS)
+	@echo $(shell echo $(shell cat count.txt)+1) | bc > count.txt
 	$(GCC) $(CFLAGS) $^  $(LDFLAGS) -o $@  -Wa,-a,-ad > image_inline.lst
 	nm -S -n $(TARGET_OUT) > image.map
+	$(SIZE) $@
 	$(PREFIX)objdump -S $@ > image.lst
-	PATH=$(FOLDERPREFIX):$$PATH;$(ESPTOOL_PY) elf2image $(TARGET_OUT) #-ff 80m -fm dio 
-	
+	PATH=$(FOLDERPREFIX):$$PATH;$(ESPTOOL_PY) elf2image $(TARGET_OUT) 
 
 burn : $(FW_FILE_1) $(FW_FILE_2)
-	($(ESPTOOL_PY) --port $(PORT) write_flash 0x00000 image.elf-0x00000.bin)||(true)
-
+	($(ESPTOOL_PY) --port $(PORT)  write_flash 0x00000 image.elf-0x00000.bin -ff 80m -fm dout)||(true)
+	sleep .1
 
 clean :
 	rm -rf $(TARGET_OUT) image.map image.lst $(FW_1) $(FW_2)
