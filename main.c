@@ -5,6 +5,7 @@
 #include "ets_sys.h"
 #include "gpio.h"
 #include "nosdk8266.h"
+#include "nosdki2s.h"
 
 //This is a little more bloated than PICO66.  It has useful stuff like PRINTF and can call anything in
 //romlib.c 
@@ -13,15 +14,16 @@
 
 extern volatile int isrs;
 
+extern struct sdio_queue i2sBufDesc[2];
+
 int main()
 {
 	int i = 0;
-	romlib_init();
+	nosdk8266_init();
 
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U,FUNC_GPIO2);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U,FUNC_GPIO5);
 	PIN_DIR_OUTPUT = _BV(2); //Enable GPIO2 light off.
-	PIN_DIR_OUTPUT = _BV(5); //Enable GPIO2 light off.
 
 	printf( "Trying a Flash test write.\n" );
 
@@ -38,12 +40,13 @@ int main()
 
 	InitI2S();
 
-	SendI2S();
 	while(1)
 	{
-		printf( "Hello World %d / %d\n", i, isrs );
+		SLC_INT_CLRL = -1;
+		SendI2S();
 		PIN_OUT_SET = _BV(2); //Turn GPIO2 light off.
 		call_delay_us( 500000 );
+		printf( "Hello World %d / %d  %p\n", i, isrs, SLC_INT_RAWL );
 		PIN_OUT_CLEAR = _BV(2); //Turn GPIO2 light off.
 		call_delay_us( 500000 );
 		i++;

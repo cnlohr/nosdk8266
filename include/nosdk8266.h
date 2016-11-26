@@ -42,6 +42,10 @@ extern volatile uint8_t  * RTCRAM; //Pointer to RTC Ram (1024 bytes)
 void nosdk8266_init();
 
 
+//For pico, or if all you want is to update the clock, call this.
+void nosdk8266_clock();
+
+
 #ifndef PICO66
 #define pico_i2c_writereg rom_i2c_writeReg
 void rom_i2c_writeReg( int reg, int hosid, int par, int val ); 

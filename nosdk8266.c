@@ -72,7 +72,7 @@ static void set_pll(void)
 #endif
 }
 
-void setup_clock()
+void nosdk8266_clock()
 {
 #if MAIN_MHZ == 52
 	t_ets_update_cpu_frequency( 52 );
@@ -101,10 +101,10 @@ void setup_clock()
 extern uint32_t _bss_start;
 extern uint32_t _bss_end;
 
-void romlib_init()
+void nosdk8266_init()
 {
 	uint32_t *addr;
-	setup_clock();
+	nosdk8266_clock();
 
     for (addr = &_bss_start; addr < &_bss_end; addr++)
         *addr = 0;

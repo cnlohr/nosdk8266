@@ -213,6 +213,7 @@ union sdio_slave_status
 #define SLC_TXLINK_RST (BIT(0))
 
 #define SLC_INT_RAW                              (DR_REG_SLC_BASE + 0x4)
+#define SLC_INT_RAWL                              (DR_REG_SLC_BASEL[0x4/4])
 #define SLC_TX_DSCR_EMPTY_INT_RAW (BIT(21))
 #define SLC_RX_DSCR_ERR_INT_RAW (BIT(20))
 #define SLC_TX_DSCR_ERR_INT_RAW (BIT(19))
@@ -237,6 +238,7 @@ union sdio_slave_status
 #define SLC_FRHOST_BIT0_INT_RAW (BIT(0))
 
 #define SLC_INT_STATUS                               (DR_REG_SLC_BASE + 0x8)
+#define SLC_INT_STATUSL                               (DR_REG_SLC_BASEL[0x8/4])
 #define SLC_TX_DSCR_EMPTY_INT_ST (BIT(21))
 #define SLC_RX_DSCR_ERR_INT_ST (BIT(20))
 #define SLC_TX_DSCR_ERR_INT_ST (BIT(19))

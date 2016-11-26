@@ -11,12 +11,16 @@ volatile uint32_t * DR_REG_I2S_BASEL = (volatile uint32_t*)0x60000e00;
 volatile uint32_t * DR_REG_SLC_BASEL = (volatile uint32_t*)0x60000B00;
 
 static unsigned int i2sData[2][16];
-static struct sdio_queue i2sBufDesc[2] = {
+struct sdio_queue i2sBufDesc[2] = {
 	{ .owner = 1, .eof = 1, .sub_sof = 0, .datalen = 16*4,  .blocksize = 16*4, .buf_ptr = (uint32_t)&i2sData[0], .next_link_ptr = (uint32_t)&i2sBufDesc[1] },
 	{ .owner = 1, .eof = 1, .sub_sof = 0, .datalen = 16*4,  .blocksize = 16*4, .buf_ptr = (uint32_t)&i2sData[1], .next_link_ptr = (uint32_t)&i2sBufDesc[0] },
 };
 
 volatile int isrs = 0;
+
+#define I2S_INTERRUPTS 0
+
+#if I2S_INTERRUPTS
 
 LOCAL void slc_isr(void) {
 	WRITE_PERI_REG(SLC_INT_CLR, 0xffffffff);//slc_intr_status);
@@ -29,7 +33,7 @@ LOCAL void slc_isr(void) {
 	isrs++;
 }
 
-#define USE_2812_INTERRUPTS 1
+#endif
 
 
 void InitI2S()
@@ -69,7 +73,7 @@ void InitI2S()
 
 	for( i = 0; i < 16; i++ )
 	{
-		i2sData[0][i] = 0x00000000;
+		i2sData[0][i] = 0xff00ff00;
 		i2sData[1][i] = 0xffffffff;
 	}
 
@@ -77,7 +81,7 @@ void InitI2S()
 		//SET_PERI_REG_MASK(SLC_RX_LINK, ((uint32)&i2sBufDesc[0]) & SLC_RXLINK_DESCADDR_MASK);
 	SLC_RX_LINKL = ((uint32)&i2sBufDesc[0]) & SLC_RXLINK_DESCADDR_MASK;
 
-#if USE_2812_INTERRUPTS
+#if I2S_INTERRUPTS
 
 	//Attach the DMA interrupt
 	ets_isr_attach(ETS_SLC_INUM, slc_isr);
@@ -144,7 +148,7 @@ void InitI2S()
 	//tx/rx binaureal
 //	CLEAR_PERI_REG_MASK(I2SCONF_CHAN, (I2S_TX_CHAN_MOD<<I2S_TX_CHAN_MOD_S)|(I2S_RX_CHAN_MOD<<I2S_RX_CHAN_MOD_S));
 
-#if USE_2812_INTERRUPTS
+#if I2S_INTERRUPTS
 
 	//Clear int
 		//SET_PERI_REG_MASK(I2SINT_CLR,  
@@ -192,4 +196,9 @@ void SendI2S()
 	SET_PERI_REG_MASK(SLC_RX_LINK, ((uint32)&i2sBufDesc[0]) & SLC_RXLINK_DESCADDR_MASK);
 	SET_PERI_REG_MASK(SLC_RX_LINK, SLC_RXLINK_START);*/
 }
+
+
+//NOTE: See if frame is complete:
+// (SLC_INT_RAWL & (1<<16))?event happened.
+// To clear:	SLC_INT_CLRL = -1;
 
