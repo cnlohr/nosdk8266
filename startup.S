@@ -3,7 +3,6 @@
 
 
 
-#ifdef PICO66
 
 .global delay4clk
 .align 4
@@ -11,6 +10,9 @@ delay4clk:
 	addi.n a2, a2, -1
 	bnez a2, delay4clk
 	ret.n
+
+#ifdef PICO66
+
 
 #else
 

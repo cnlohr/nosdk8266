@@ -2,6 +2,7 @@
 #include <uart_dev.h>
 #include <eagle_soc.h>
 #include <ets_sys.h>
+#include "romlib.h"
 
 #define UART0 0
 
@@ -9,25 +10,16 @@ extern UartDevice UartDev;
 
 #define	sys_const_crystal_26m_en	48	// soc_param0: 0: 40MHz, 1: 26MHz, 2: 24MHz
 
+volatile uint32_t * DPORT_BASEADDR = (volatile uint32_t *)0x3ff00000;
 volatile uint32_t * PIN_BASE = (volatile uint32_t *)0x60000300;
 volatile uint32_t * IO_BASE = (volatile uint32_t *)0x60000000;
 
 
-#ifdef PICO66
+#ifndef PICO66
 
-extern uint32_t _bss_start;
-extern uint32_t _bss_end;
-void romlib_init() {
-	uint32_t *addr = &_bss_start;
-	for (addr = &_bss_start; addr < &_bss_end; addr++)  *addr = 0; //Safe, _bss_start doesn't have to == _bss_end
-	//do{*(addr++) = 0;}while( addr < &_bss_end ); //Saves ~4 bytes if _bss_start!=_bss_end
-	uart_div_modify(UART0, (MAIN_MHZ*1000000)/115200);
-}
-
-#else
 
 //Thanks, https://github.com/pvvx/esp8266web/blob/2e25559bc489487747205db2ef171d48326b32d4/app/sdklib/system/app_main.c
-void set_pll(void)
+static void set_pll(void)
 {
 	if(rom_i2c_readReg(103,4,1) != 136) { // 8: 40MHz, 136: 26MHz
 		//if(get_sys_const(sys_const_crystal_26m_en) == 1) { // soc_param0: 0: 40MHz, 1: 26MHz, 2: 24MHz
@@ -45,9 +37,24 @@ void romlib_init()
 {
 	uint32_t *addr;
 
-	ets_update_cpu_frequency( MAIN_MHZ );
+#if MAIN_MHZ == 52
+	ets_update_cpu_frequency( 52 );
+#elif MAIN_MHZ == 104
+	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
+	ets_update_cpu_frequency( 104 );
+#elif MAIN_MHZ == 80
 	rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL to 80 MHz.
+	HWREG(DPORT_BASEADDR,0x14) &= 0x7E; //Regular clock bit.
+ 	ets_update_cpu_frequency(80);
+#elif MAIN_MHZ == 160	
+	rom_rfpll_reset();	//Reset PLL.
+	set_pll();			//Set PLL to 80 MHz.
+	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
+	ets_update_cpu_frequency(160);
+#else
+	#error System MHz must be 52, 80, or 160
+#endif
 
     for (addr = &_bss_start; addr < &_bss_end; addr++)
         *addr = 0;
@@ -57,5 +64,5 @@ void romlib_init()
 	uart_div_modify(UART0, (MAIN_MHZ*1000000)/115200);
 }
 
-#endif
 
+#endif

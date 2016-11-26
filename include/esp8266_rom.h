@@ -81,7 +81,7 @@ extern SpiFlashChip * flashchip; //don't forget: flashchip->chip_size = 0x010000
 	}
 */
 
-
+void system_update_cpu_freq( uint8_t mhz );
 void software_reset();
 
 
