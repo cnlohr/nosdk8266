@@ -6,20 +6,20 @@ This is a working ESP8266/ESP8285 minimial, non-SDK application.  It can optiona
 
 Alternatively, a "PICO66" build can be made, which is intended to be compliant to the HackADay [1kB challenge](https://hackaday.io/contest/18215-the-1kb-challenge). In PICO66 mode, printf'ing is disabled (Though it can be overridden for debugging)  In order to be compliant, all ROM functions will count against you.  Basically if you want to participate you'll have to make sure USE_PRINT is turned off in your final submission.
 
-PICO66 Code-size-table (with USE_PRINT disabled) as of 755c743de4d430a6a1b3ee2c11e583838d50f422
+PICO66 Code-size-table (with USE_PRINT disabled) as of c16912a
 
 | Desired Frequency | I2S Size | Size, without I2S bus | Remarks | Peripheral Bus Clock | Voids Warranty |
 | ----------------- | ----------------------- | --------------------- | ------- | ----- | -------------- |
 | 52 MHz | Unavailable | 135+8 | No PLL, No overclocking, Default behavior | 52 MHz | N |
 | 104 MHz | Unavailable | 151+8 | No PLL, Overclocking bit set | 52 MHz | ? |
-| 80 MHz | 448+32 | 228+8 | PLL, Normal speed. | 80 MHz | N |
-| 160 MHz | 464+32 | 244+8 | PLL, Normal "overclock" mode | 80 MHz | ? |
-| 115 MHz | 448+32 | 228+8 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
-| 231 MHz | 464+32 | 244+8 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
-| 173 MHz | 448+32 | 228+8 | Needs >.2s reset to boot. | 173 MHz | Y |
-| 346 MHz | 464+32 | 244+8 | Needs >.2s reset to boot. | 173 MHz | Y |
-| 189 MHz | 448+32 | 228+8 | Frequently will not boot. | ~189 MHz | **YES** |
-| 378 MHz | 464+32 | 244+8 | Runs slower on ESP8285. | ~189 MHz | **YES** |
+| 80 MHz | 416+32 | 228+8 | PLL, Normal speed. | 80 MHz | N |
+| 160 MHz | 432+32 | 244+8 | PLL, Normal "overclock" mode | 80 MHz | ? |
+| 115 MHz | 416+32 | 228+8 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
+| 231 MHz | 432+32 | 244+8 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
+| 173 MHz | 416+32 | 228+8 | Needs >.2s reset to boot. | 173 MHz | Y |
+| 346 MHz | 432+32 | 244+8 | Needs >.2s reset to boot. | 173 MHz | Y |
+| 189 MHz | 416+32 | 228+8 | Frequently will not boot. | ~189 MHz | **YES** |
+| 378 MHz | 432+32 | 244+8 | Runs slower on ESP8285. | ~189 MHz | **YES** |
 
 Interestingly, you might notice that the way this works is with a 1040 MHz high speed PLL clock and divides from that.  When the clock rate is very high, i.e. 189/378 MHz, the PLL may or may not lock if the processor boots at all.  I found that my clock was wandering around when operating up there.
 
