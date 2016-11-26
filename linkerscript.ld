@@ -19,7 +19,7 @@ PHDRS
 
 
 /*  Default entry point:  */
-ENTRY(call_user_start)
+ENTRY(main)
 EXTERN(_DebugExceptionVector)
 EXTERN(_DoubleExceptionVector)
 EXTERN(_KernelExceptionVector)

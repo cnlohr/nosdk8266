@@ -20,14 +20,14 @@
 #error This is intended only to be compiled with PICO66
 #endif
 
-
-int call_user_start()
+int main()
 {
 	//This handles zeroin'g the BSS RAM, as well as setting up the serial prot to 115k Baud
 	uint32_t *addr = &_bss_start;
 	for (addr = &_bss_start; addr < &_bss_end; addr++)  *addr = 0; //Safe, _bss_start doesn't have to == _bss_end
 	nosdk8266_clock();
-	uart_div_modify(UART0, (PERIPH_MHZ*1000000)/115200);
+
+	uart_div_modify(UART0, (PERIPH_MHZ*1000000)/115200);  //Code will not be emitted unless printing is turned on.
 
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U,FUNC_GPIO2);
 	PIN_DIR_OUTPUT = _BV(2); //Enable GPIO2 light off.

@@ -80,12 +80,12 @@ void nosdk8266_clock()
 	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
 	t_ets_update_cpu_frequency( 104 );
 #elif MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 173 || MAIN_MHZ==189
-	rom_rfpll_reset();	//Reset PLL.
+	//rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL
 	HWREG(DPORT_BASEADDR,0x14) &= 0x7E; //Regular clock bit.
  	t_ets_update_cpu_frequency(80);
 #elif MAIN_MHZ == 160 || MAIN_MHZ == 231 || MAIN_MHZ == 346 || MAIN_MHZ==378 //Won't boot at 378 MHz.
-	rom_rfpll_reset();	//Reset PLL.
+	//rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL
 	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
 	t_ets_update_cpu_frequency(160);
