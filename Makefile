@@ -12,7 +12,7 @@ all : $(TARGET_OUT)
 
 BUILD:=PICO
 #BUILD:=REGULAR
-MAIN_MHZ:=80  #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
+MAIN_MHZ:=346 #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
 USE_I2S:=YES
 #USE_PRINT:=YES
 
@@ -64,7 +64,7 @@ ifeq (YES, $(USE_I2S))
 endif
 
 #Adding the -g flag makes our assembly easier to read and does not increase size of final executable.
-CFLAGS:=$(CFLAGS) -Os -Iinclude -nostdlib  -DMAIN_MHZ=$(MAIN_MHZ)  -mno-serialize-volatile -mlongcalls
+CFLAGS:=$(CFLAGS) -Os -Iinclude -nostdlib  -DMAIN_MHZ=$(MAIN_MHZ)  -mno-serialize-volatile -mlongcalls -g
 SRCS:=$(SRCS) startup.S nosdk8266.c
 
 $(TARGET_OUT) : $(SRCS)

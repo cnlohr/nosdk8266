@@ -21,7 +21,7 @@
 #error This is intended only to be compiled with PICO66
 #endif
 
-int main()
+__attribute__((noreturn)) int main()
 {
 	//This handles zeroin'g the BSS RAM, as well as setting up the serial prot to 115k Baud
 	uint32_t *addr = &_bss_start;
