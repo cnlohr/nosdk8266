@@ -4,9 +4,9 @@ Ever wonder what the ESP8266 can do /without/ wifi?
 
 This is a working ESP8266/ESP8285 minimial, non-SDK application.  It can optionally use the ROM functions to deal with I/O, interrupts, printf'ing, etc.
 
-Alternatively, a "PICO" build can be made, which is intended to be compliant to the HackADay [1kB challenge](https://hackaday.io/contest/18215-the-1kb-challenge). In PICO mode, printf'ing is disabled (Though it can be overridden for debugging)  In order to be compliant, all ROM functions will count against you.  Basically if you want to participate you'll have to make sure USE_PRINT is turned off in your final submission.
+Alternatively, a "PICO66" build can be made, which is intended to be compliant to the HackADay [1kB challenge](https://hackaday.io/contest/18215-the-1kb-challenge). In PICO66 mode, printf'ing is disabled (Though it can be overridden for debugging)  In order to be compliant, all ROM functions will count against you.  Basically if you want to participate you'll have to make sure USE_PRINT is turned off in your final submission.
 
-PICO Code-size-table (with USE_PRINT disabled) as of 755c743de4d430a6a1b3ee2c11e583838d50f422
+PICO66 Code-size-table (with USE_PRINT disabled) as of 755c743de4d430a6a1b3ee2c11e583838d50f422
 
 | Desired Frequency | I2S Size | Size, without I2S bus | Remarks | Peripheral Bus Clock | Voids Warranty |
 | ----------------- | ----------------------- | --------------------- | ------- | ----- | -------------- |
