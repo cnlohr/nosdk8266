@@ -9,4 +9,5 @@ It operates at 80 MHz, sets up an interrupt and prints out a message periodicall
 
 ...unless you're running in PICO66 mode (see Makefile)
 
-In this mode, no setup is performed of serial (printfs are nulled out), and no clock changing is performed.  This means the processor runs at a balmy 52MHz outta the gate.  It also has a delay function specifically tailored to this.  The PICO66 mode is for the hackaday 1kB challenge: https://hackaday.io/contest/18215-the-1kb-challenge
+In this mode, no setup is performed of serial (printfs are nulled out), and no clock changing is performed.  It has a delay function specifically tailored to assuming a 52 MHz clock.  The PICO66 mode is for the hackaday 1kB challenge: https://hackaday.io/contest/18215-the-1kb-challenge
+
