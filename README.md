@@ -12,14 +12,14 @@ PICO Code-size-table (with USE_PRINT disabled) as of 755c743de4d430a6a1b3ee2c11e
 | ----------------- | ----------------------- | --------------------- | ------- | ----- | -------------- |
 | 52 MHz | Unavailable | 135+8 | No PLL, No overclocking, Default behavior | 52 MHz | N |
 | 104 MHz | Unavailable | 151+8 | No PLL, Overclocking bit set | 52 MHz | ? |
-| 80 MHz | 464+32 | 248+8 | PLL, Normal speed. | 80 MHz | N |
+| 80 MHz | 448+32 | 228+8 | PLL, Normal speed. | 80 MHz | N |
 | 160 MHz | 464+32 | 244+8 | PLL, Normal "overclock" mode | 80 MHz | ? |
-| 115 MHz |  |  | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
-| 231 MHz |  |  | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
-| 173 MHz |  |  | Needs >.2s reset to boot. | 173 MHz | Y |
-| 346 MHz |  |  | Needs >.2s reset to boot. | 173 MHz | Y |
-| 189 MHz |  |  | Frequently will not boot. | ~189 MHz | SUPER YES |
-| 378 MHz |  |  | Frequently will not boot. Will sometimes boot on ESP8285, but operates a little slower. | ~189 MHz | SUPER YES|
+| 115 MHz | 448+32 | 228+8 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
+| 231 MHz | 464+32 | 244+8 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
+| 173 MHz | 448+32 | 228+8 | Needs >.2s reset to boot. | 173 MHz | Y |
+| 346 MHz | 464+32 | 244+8 | Needs >.2s reset to boot. | 173 MHz | Y |
+| 189 MHz | 448+32 | 228+8 | Frequently will not boot. | ~189 MHz | **YES** |
+| 378 MHz | 464+32 | 244+8 | Runs slower on ESP8285. | ~189 MHz | **YES** |
 
 
 Interestingly, you might notice that the way this works is with a 1040 MHz.
