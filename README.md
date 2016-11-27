@@ -75,5 +75,8 @@ A large portion of figuring out what's what was done by @pvvx, over at  his [esp
 I'm sure there's more...
 # Todo
 
-Figure out how to get rid of the prologue to main().  Even though it's marked as noreturn, GCC is doing stuff with the stack, etc.
+* Figure out how to get rid of the prologue to main().  Even though it's marked as noreturn, GCC is doing stuff with the stack, etc.
 
+* Add Sleep feature.
+
+* Figure out why power consumption is higher than I would expect.
