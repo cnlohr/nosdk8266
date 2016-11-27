@@ -1,8 +1,10 @@
 # nosdk8266
 
-There is an awesome little $2 processor called an "ESP8266."  It's the definitive chip that is bringing the internet of things to life. Ever wonder what the ESP8266 can do *without* wifi?  Well, this project is it!  No longer shackled by an SDK that takes up 200 kB of flash, and tons of RAM, you're free to experiment and do so quickly.  Little did we realize how limited the clocks were and just how fast this chip can be whe unleashed.
+There is an awesome little $2 processor called an "ESP8266."  It's the definitive chip that is bringing the internet of things to life. Ever wonder what the ESP8266 can do *without* wifi?  Well, this project is it!  No longer shackled by an SDK that takes up 200 kB of flash, and tons of RAM, you're free to experiment and do so quickly.  Little did we realize how limited the clocks were and just how fast this chip can be once unleashed.
 
 This is a working ESP8266/ESP8285 minimial, non-SDK application.  It can optionally use the ROM functions to deal with I/O, interrupts, printf'ing, etc.
+
+If you don't need to access FLASH at all after booting, that frees up some of those GPIOs attached to the flash chip, provided you disable its CS line.
 
 Alternatively, a "PICO66" build can be made, which is intended to be compliant to the HackADay [1kB challenge](https://hackaday.io/contest/18215-the-1kb-challenge). In PICO66 mode, printf'ing is disabled (Though it can be overridden for debugging)  In order to be compliant, all ROM functions will count against you.  Basically if you want to participate you'll have to make sure USE_PRINT is turned off in your final submission.
 
