@@ -62,7 +62,6 @@ A large portion of figuring out what's what was done by @pvvx, over at  his [esp
 
 # Todo
 
-Find out why -fwhole-program dosen't work.  It could reduce overhead of function calls.
-
+Change the way GPIOs are configured.  They can be done much more tightly if they never have to be read.
 
 
