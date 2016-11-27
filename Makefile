@@ -33,7 +33,7 @@ GCC:=$(PREFIX)gcc
 
 #-mno-serialize-volatile will prevent extra memw things from being generated.
 
-LDFLAGS:=-T linkerscript.ld -T addresses.ld
+LDFLAGS:=-T ld/linkerscript.ld -T ld/addresses.ld
 FOLDERPREFIX:=$(GCC_FOLDER)/bin
 PORT:=/dev/ttyUSB0
 
@@ -59,13 +59,13 @@ endif
 
 
 ifeq (YES, $(USE_I2S))
-	SRCS:=$(SRCS) nosdki2s.c
+	SRCS:=$(SRCS) src/nosdki2s.c
 	CFLAGS:=$(CFLAGS) -DUSE_I2S
 endif
 
 #Adding the -g flag makes our assembly easier to read and does not increase size of final executable.
 CFLAGS:=$(CFLAGS) -Os -Iinclude -nostdlib  -DMAIN_MHZ=$(MAIN_MHZ)  -mno-serialize-volatile -mlongcalls -g
-SRCS:=$(SRCS) startup.S nosdk8266.c
+SRCS:=$(SRCS) src/startup.S src/nosdk8266.c
 
 $(TARGET_OUT) : $(SRCS)
 	@echo $(shell echo $(shell cat count.txt)+1) | bc > count.txt
