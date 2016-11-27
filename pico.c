@@ -3,9 +3,9 @@
 #include "esp8266_rom.h"
 #include "eagle_soc.h"
 #include "ets_sys.h"
-#include "gpio.h"
 #include "nosdk8266.h"
 #include "nosdki2s.h"
+#include "pin_mux_register.h"
 
 //PICO66 is ideal for running an absolutely minimal build.
 //If you want printf(...) you'll need PICOWITHPRINT and call romlib_init().
@@ -21,7 +21,7 @@
 #error This is intended only to be compiled with PICO66
 #endif
 
- __attribute__((noreturn)) int main()
+ __attribute__((__noreturn__)) int main()
 {
 	//This handles zeroin'g the BSS RAM, as well as setting up the serial prot to 115k Baud
 	nosdk8266_zerobss();
@@ -33,7 +33,8 @@
 	//Code will not be emitted unless printing is turned on.
 	uart_div_modify(UART0, (PERIPH_FREQ*1000000)/115200);
 
-	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U,FUNC_GPIO2);
+	nosdk8266_configio( PERIPHS_IO_MUX_GPIO2_U, FUNC_GPIO2, 0, 0 );
+	//PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U,FUNC_GPIO2);
 	PIN_DIR_OUTPUT = _BV(2); //Enable GPIO2 light off.
 
 #ifdef USE_I2S

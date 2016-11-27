@@ -9,7 +9,6 @@
 #define _ETS_SYS_H
 
 #include "c_types.h"
-#include "eagle_soc.h"
 
 typedef uint32_t ETSSignal;
 typedef uint32_t ETSParam;
