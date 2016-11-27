@@ -10,7 +10,7 @@ Alternatively, a "PICO66" build can be made, which is intended to be compliant t
 
   PICO66 Code-size-table (with USE_PRINT disabled, simple blink program) as of [0aafb08](https://github.com/cnlohr/nosdk8266/commit/0aafb08069611f47276379884e0852e593915d52)
 
-| Desired Frequency | I2S Size | Size, without I2S bus | Remarks | Peripheral Bus Clock | Voids Warranty |
+| Desired Frequency | I2S Size (in bytes) | Size, without I2S bus | Remarks | Peripheral Bus Clock | Voids Warranty |
 | ----------------- | ----------------------- | --------------------- | ------- | ----- | -------------- |
 | 52 MHz | Unavailable | 131+0 | No PLL, No overclocking, Default behavior | 52 MHz | N |
 | 104 MHz | Unavailable | 147+0 | No PLL, Overclocking bit set | 52 MHz | ? |
