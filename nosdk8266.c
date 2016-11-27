@@ -4,7 +4,6 @@
 #include <ets_sys.h>
 #include "nosdk8266.h"
 
-
 extern UartDevice UartDev;
 
 #define	sys_const_crystal_26m_en	48	// soc_param0: 0: 40MHz, 1: 26MHz, 2: 24MHz
@@ -76,7 +75,7 @@ void nosdk8266_clock()
 #if MAIN_MHZ == 52
 	t_ets_update_cpu_frequency( 52 );
 #elif MAIN_MHZ == 104
-	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
+	DPORT_BASEADDR[0x14/4] |= 0x01; //Overclock bit.
 	t_ets_update_cpu_frequency( 104 );
 #elif MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 173 || MAIN_MHZ==189
 	//rom_rfpll_reset();	//Reset PLL.
@@ -86,7 +85,7 @@ void nosdk8266_clock()
 #elif MAIN_MHZ == 160 || MAIN_MHZ == 231 || MAIN_MHZ == 346 || MAIN_MHZ==378 //Won't boot at 378 MHz.
 	//rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL
-	HWREG(DPORT_BASEADDR,0x14) |= 0x01; //Overclock bit.
+	DPORT_BASEADDR[0x14/4] |= 0x01; //Overclock bit.
 	t_ets_update_cpu_frequency(160);
 #else
 	#error System MHz must be 52, 80, 120, 160 or 240
@@ -94,6 +93,11 @@ void nosdk8266_clock()
 
 }
 
+void nosdk8266_zerobss()
+{
+	uint32_t *addr = &_bss_start;
+	for (addr = &_bss_start; addr < &_bss_end; addr++)  *addr = 0; //Safe, _bss_start doesn't have to == _bss_end
+}
 
 #ifndef PICO66
 

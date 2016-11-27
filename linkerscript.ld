@@ -121,8 +121,8 @@ SECTIONS
     *(.gnu.version_d)
     . = ALIGN(4);		/* this table MUST be 4-byte aligned */
     _bss_table_start = ABSOLUTE(.);
-    LONG(_bss_start)
-    LONG(_bss_end)
+    /*LONG(_bss_start)
+    LONG(_bss_end)*/
     _bss_table_end = ABSOLUTE(.);
     _rodata_end = ABSOLUTE(.);
   } >dram0_0_seg :dram0_0_phdr

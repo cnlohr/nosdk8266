@@ -48,6 +48,8 @@ void nosdk8266_init();
 //For pico, or if all you want is to update the clock, call this.
 void nosdk8266_clock();
 
+//Zero all global, uninitialized RAM
+void nosdk8266_zerobss();
 
 #ifdef PICO66
 //#define pico_i2c_writereg( reg, hostid, par, val ) { asm volatile( "_movi a2, " #reg "\n_movi.n a3, " #hostid "\n_movi.n a4, " #par "\nmovi a5, " #val "\n_call0 pico_i2c_writereg_asm" : : : "a2", "a3", "a4", "a5", "a0" ); }  //Doesn't work.
@@ -59,6 +61,4 @@ void pico_i2c_writereg_asm( uint32_t a, uint32_t b);
 void rom_i2c_writeReg( int reg, int hosid, int par, int val ); 
 #endif
 
-
 #endif
-

@@ -21,17 +21,17 @@
 #error This is intended only to be compiled with PICO66
 #endif
 
-__attribute__((noreturn)) int main()
+ __attribute__((noreturn)) int main()
 {
 	//This handles zeroin'g the BSS RAM, as well as setting up the serial prot to 115k Baud
-	uint32_t *addr = &_bss_start;
-	for (addr = &_bss_start; addr < &_bss_end; addr++)  *addr = 0; //Safe, _bss_start doesn't have to == _bss_end
+	nosdk8266_zerobss();
 
-#if MAIN_MHZ!=52
+	//This handles setting the clock properties, i.e. PLL, overclock bit, etc.
 	nosdk8266_clock();
-#endif
 
-	uart_div_modify(UART0, (PERIPH_FREQ*1000000)/115200);  //Code will not be emitted unless printing is turned on.
+	//Fix UART baud speed.
+	//Code will not be emitted unless printing is turned on.
+	uart_div_modify(UART0, (PERIPH_FREQ*1000000)/115200);
 
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U,FUNC_GPIO2);
 	PIN_DIR_OUTPUT = _BV(2); //Enable GPIO2 light off.
