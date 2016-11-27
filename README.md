@@ -6,7 +6,7 @@ This is a working ESP8266/ESP8285 minimial, non-SDK application.  It can optiona
 
 Alternatively, a "PICO66" build can be made, which is intended to be compliant to the HackADay [1kB challenge](https://hackaday.io/contest/18215-the-1kb-challenge). In PICO66 mode, printf'ing is disabled (Though it can be overridden for debugging)  In order to be compliant, all ROM functions will count against you.  Basically if you want to participate you'll have to make sure USE_PRINT is turned off in your final submission.
 
-PICO66 Code-size-table (with USE_PRINT disabled, simple blink program) as of f7c0c1c
+PICO66 Code-size-table (with USE_PRINT disabled, simple blink program) as of f7c0c1c876286d9e1f4277b9e3e7d740c84c5e6c
 
 | Desired Frequency | I2S Size | Size, without I2S bus | Remarks | Peripheral Bus Clock | Voids Warranty |
 | ----------------- | ----------------------- | --------------------- | ------- | ----- | -------------- |
