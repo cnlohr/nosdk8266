@@ -1,5 +1,9 @@
 # nosdk8266
 
+Hackaday Article: http://hackaday.com/2016/11/30/the-esp-a-new-1kb-contender-appears
+Youtube video:
+[![ESP8266s without the big SDK "nosdk8266"](http://img.youtube.com/vi/AWT2w7v9szs/0.jpg)](http://www.youtube.com/watch?v=AWT2w7v9szs)
+
 There is an awesome little $2 processor called an "ESP8266."  It's the definitive chip that is bringing the internet of things to life. Ever wonder what the ESP8266 can do *without* wifi?  Well, this project is it!  No longer shackled by an SDK that takes up 200 kB of flash, and tons of RAM, you're free to experiment and do so quickly.  Little did we realize how limited the clocks were and just how fast this chip can be once unleashed.
 
 This is a working ESP8266/ESP8285 minimial, non-SDK application.  It can optionally use the ROM functions to deal with I/O, interrupts, printf'ing, etc.
