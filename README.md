@@ -1,5 +1,7 @@
 # nosdk8266
 
+**Update** @ba0sh1 on Twitter pointed out I'm about 2 years too late.  pvvx already has something similar to this, but with more stuff like timers, etc.: https://github.com/pvvx/SDKnoWiFi So - if you want something between this and the full-blown wifi stack, go there!
+
 Hackaday Article: http://hackaday.com/2016/11/30/the-esp-a-new-1kb-contender-appears
 Youtube video:
 [![ESP8266s without the big SDK "nosdk8266"](http://img.youtube.com/vi/AWT2w7v9szs/0.jpg)](http://www.youtube.com/watch?v=AWT2w7v9szs)
