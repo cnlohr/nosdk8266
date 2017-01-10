@@ -29,6 +29,8 @@ static void set_pll(void)
 		//if(get_sys_const(sys_const_crystal_26m_en) == 1) { // soc_param0: 0: 40MHz, 1: 26MHz, 2: 24MHz
 	//Switch to 80 first.
 
+	//This is actually 0x88.  You can set this to 0xC8 to double-overclock the low-end bus.
+	//This can get you to a 160 MHz peripheral bus if setting it normally to 80 MHz.
 	pico_i2c_writereg(103,4,1,136);
 
 	//	... Looks like the main PLL operates at 1040 MHz
