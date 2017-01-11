@@ -16,9 +16,11 @@
 #elif MAIN_MHZ == 189
 	#define PERIPH_FREQ 189
 #elif MAIN_MHZ == 160	
-	#define PERIPH_FREQ 80
+	#define PERIPH_FREQ 160
 #elif MAIN_MHZ == 231
 	#define PERIPH_FREQ 115
+#elif MAIN_MHZ == 320	
+	#define PERIPH_FREQ 160
 #elif MAIN_MHZ == 346
 	#define PERIPH_FREQ 173
 #elif MAIN_MHZ == 378  //Won't boot on my ESP.  PLL@5.5 (how?)

@@ -31,7 +31,11 @@ static void set_pll(void)
 
 	//This is actually 0x88.  You can set this to 0xC8 to double-overclock the low-end bus.
 	//This can get you to a 160 MHz peripheral bus if setting it normally to 80 MHz.
-	pico_i2c_writereg(103,4,1,136);
+#if PERIPH_FREQ == 160
+	pico_i2c_writereg(103,4,1,0xc8);
+#else
+	pico_i2c_writereg(103,4,1,0x88);
+#endif
 
 	//	... Looks like the main PLL operates at 1040 MHz
 	//	If the divisor is <9, it seems the chip cannot boot on its own, without reboot.
@@ -67,8 +71,8 @@ static void set_pll(void)
 #elif PERIPH_FREQ == 189
 	pico_i2c_writereg(103,4,2,0x81);
 #else
-	// set 80MHz PLL CPU
-	pico_i2c_writereg(103,4,2,145);
+	// set 80MHz/160MHz PLL CPU
+	pico_i2c_writereg(103,4,2,0x91);
 #endif
 }
 
@@ -79,12 +83,12 @@ void nosdk8266_clock()
 #elif MAIN_MHZ == 104
 	DPORT_BASEADDR[0x14/4] |= 0x01; //Overclock bit.
 	t_ets_update_cpu_frequency( 104 );
-#elif MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 173 || MAIN_MHZ==189
+#elif MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 160 || MAIN_MHZ == 173 || MAIN_MHZ==189
 	//rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL
 	//HWREG(DPORT_BASEADDR,0x14) &= 0x7E; //Regular clock bit.
  	t_ets_update_cpu_frequency(80);
-#elif MAIN_MHZ == 160 || MAIN_MHZ == 231 || MAIN_MHZ == 346 || MAIN_MHZ==378 //Won't boot at 378 MHz.
+#elif MAIN_MHZ == 231 || MAIN_MHZ == 346 || MAIN_MHZ==378 || MAIN_MHZ == 320 //Won't boot at 378 MHz.
 	//rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL
 	DPORT_BASEADDR[0x14/4] |= 0x01; //Overclock bit.

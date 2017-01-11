@@ -12,7 +12,7 @@ all : $(TARGET_OUT)
 
 BUILD:=PICO
 #BUILD:=REGULAR
-MAIN_MHZ:=80 #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
+MAIN_MHZ:=320 #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
 USE_I2S:=YES
 #USE_PRINT:=YES
 
