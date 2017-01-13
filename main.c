@@ -27,11 +27,14 @@ int main()
 
 	printf( "Trying a Flash test write.\n" );
 
+	Cache_Read_Disable();
+	SPIUnlock();
 	SPIEraseBlock(0x40000>>16);
 	uint32_t stuff = 0xAABBCCDD;
 	SPIWrite(0x40004, &stuff, 4);
 	stuff = 0;
 	SPIRead(0x40004, &stuff, 4);
+	Cache_Read_Enable(0,0,1);
 
 	printf( "Checking to see if we can read from cache: %p / %p (both should be 0xaabbccdd)\n", *(void **)(0x40200000 + 0x40000 + 4), stuff );
 
