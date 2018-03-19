@@ -36,7 +36,7 @@ ADDITIONAL_DEPS?=
 #-mno-serialize-volatile will prevent extra memw things from being generated.
 
 ifneq (YES, $(SUBMODULE))
-	SRCPREFIX:=
+	SRCPREFIX:=./
 	ifeq (REGULAR, $(BUILD))
 		#Non-PIOC66 mode (Regular, 80 MHz, etc.)
 		CFLAGS:=$(CFLAGS) -flto
