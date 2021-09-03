@@ -13,13 +13,12 @@ all : $(TARGET_OUT)
 #SUBMODULE if we are including this in another project.
 SUBMODULE?=NO
 
-BUILD?=PICO
-#BUILD:=REGULAR
+BUILD?=REGULAR
 MAIN_MHZ?=320 #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
 USE_I2S?=YES
-#USE_PRINT:=YES
+USE_PRINT:=YES
 
-ESP_OPEN_SDK:=~/esp8266/esp-open-sdk
+ESP_OPEN_SDK:=~/esp/esp-open-sdk
 
 FW_1 = image.elf-0x10000.bin
 FW_2 = image.elf-0x00000.bin
@@ -56,7 +55,7 @@ endif
 
 LDFLAGS:=-T $(SRCPREFIX)ld/linkerscript.ld -T $(SRCPREFIX)ld/addresses.ld
 FOLDERPREFIX:=$(GCC_FOLDER)/bin
-PORT:=/dev/ttyUSB0
+PORT:=/dev/ttyS12
 
 
 ifeq (YES, $(USE_PRINT))
@@ -88,8 +87,6 @@ $(TARGET_OUT) : $(ADDITIONAL_DEPS) $(SRCS)
 
 burn : $(FW_FILE_1) $(FW_FILE_2) $(TARGET_OUT)
 	($(ESPTOOL) --port $(PORT) write_flash 0x00000 image.elf-0x00000.bin -ff 80m -fm dout)||(true)
-	sleep .1
-	($(ESPTOOL) --port $(PORT) run)||(true)
 
 clean :
 	rm -rf $(TARGET_OUT) image.map image.lst $(FW_1) $(FW_2)
