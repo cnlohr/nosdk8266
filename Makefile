@@ -4,9 +4,9 @@ all : $(TARGET_OUT)
 #SUBMODULE if we are including this in another project.
 SUBMODULE?=NO
 
-#Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#
-# = Won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why). * = peripheral clock at processor clock.
-MAIN_MHZ?=320
+#Pick from *52, *80, 104 or *115, 160, *173, *189, 231, 346
+# = Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why). * = peripheral clock at processor clock.
+MAIN_MHZ?=346
 USE_I2S?=YES
 
 ESP_OPEN_SDK:=~/esp/esp-open-sdk
@@ -39,7 +39,7 @@ else ifeq (SUBMODULE, $(USE_I2S))
 endif
 
 #Adding the -g flag makes our assembly easier to read and does not increase size of final executable.
-CFLAGS:=$(CFLAGS) -Os -I$(SRCPREFIX)include -nostdlib  -DMAIN_MHZ=$(MAIN_MHZ)  -mno-serialize-volatile -mlongcalls -g
+CFLAGS:=$(CFLAGS) -Ofast -I$(SRCPREFIX)include -nostdlib -DMAIN_MHZ=$(MAIN_MHZ) -mno-serialize-volatile -mlongcalls -g
 SRCS:=$(SRCS) $(SRCPREFIX)src/startup.S $(SRCPREFIX)src/nosdk8266.c
 
 $(TARGET_OUT) : $(SRCS)
