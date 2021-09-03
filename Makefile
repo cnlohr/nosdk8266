@@ -4,9 +4,9 @@ all : $(TARGET_OUT)
 #SUBMODULE if we are including this in another project.
 SUBMODULE?=NO
 
-#Pick from *52, *80, 104 or *115, 160, *173, *189, 231, 346
-# = Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why). * = peripheral clock at processor clock.
-MAIN_MHZ?=346
+#Pick from *52, *80, 104 or *115, 160, *173, *189, 231, 320, 346 or !366 (for now)
+#Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why).  * = peripheral clock at processor clock.  ! = core running at 379MHz, but PLL 183MHz (half of 366MHz).
+MAIN_MHZ?=366
 USE_I2S?=YES
 
 ESP_OPEN_SDK:=~/esp/esp-open-sdk

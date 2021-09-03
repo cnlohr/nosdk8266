@@ -3,10 +3,10 @@
 
 #if MAIN_MHZ == 52 || MAIN_MHZ == 80 || MAIN_MHZ == 104 || MAIN_MHZ == 115 || MAIN_MHZ == 160 || MAIN_MHZ == 173 || MAIN_MHZ == 189
 	#define PERIPH_FREQ MAIN_MHZ
-#elif MAIN_MHZ == 231 || MAIN_MHZ == 320 || MAIN_MHZ == 346
+#elif MAIN_MHZ == 231 || MAIN_MHZ == 320 || MAIN_MHZ == 346 || MAIN_MHZ == 366
 	#define PERIPH_FREQ MAIN_MHZ / 2
 #else
-	#error System MHz must be 52, 80, 104, 115, 160, 173, 189, 231, 320 or 346 (for now)
+	#error System MHz must be 52, 80, 104, 115, 160, 173, 189, 231, 320, 346 or 366 (for now)
 #endif
 
 extern uint32_t _bss_start;
@@ -18,13 +18,8 @@ extern volatile uint32_t * IOMUX_BASE;
 extern volatile uint32_t * SPI0_BASE;
 extern volatile uint8_t  * RTCRAM; //Pointer to RTC Ram (1024 bytes)
 
-#define HWREG(BASE, OFF) BASE[OFF>>2]
+#define HWREG(BASE, OFF) BASE[OFF >> 2]
 
-// Lets keep this
-//void pico_i2c_writereg_asm( uint32_t a, uint32_t b);
-//#define pico_i2c_writereg( reg, hostid, par, val ) pico_i2c_writereg_asm( (hostid<<2) + 0x60000a00 + 0x300, (reg | (par<<8) | (val<<16) | 0x01000000 ) )
-
-#define pico_i2c_writereg rom_i2c_writeReg
 void rom_i2c_writeReg(int reg, int hosid, int par, int val); 
 
 //Sets clock frequency, PLL and initializes BSS.

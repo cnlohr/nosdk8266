@@ -17,34 +17,32 @@ volatile uint8_t  * RTCRAM = (volatile uint8_t *)0x60001000; //Pointer to RTC Ra
 
 //This is actually 0x88.  You can set this to 0xC8 to double-overclock the low-end bus.
 //This can get you to a 160 MHz peripheral bus if setting it normally to 80 MHz.
-//pico_i2c_writereg(103,4,1,0xc8);
-//pico_i2c_writereg(103,4,1,0x88);
+//rom_i2c_writeReg(103,4,1,0xc8);
+//rom_i2c_writeReg(103,4,1,0x88);
 
 //	... Looks like the main PLL operates at 1040 MHz
 //	If the divisor is <9, it seems the chip cannot boot on its own, without reboot.
 //	It looks like when divisor goes less than 5, it somehow jumps to exactly 5.5.
 //
-//   0x0X: 190ISH MHz (Won't link)
-//   0x1X: 115.5ISH MHz
-//   0x2X: 189.0ISH MHz
-//   0x3X: 104.0ISH MHz?
-//   0x4X: 189.4ISH MHz?
-//   0x5X: 94.61 MHz?
-//   0x6X: 189.0ISH MHz?
-//   0x7X: 86.6ISH MHz?
-//   0x8X: 189.0ISH MHz?
-//   0x91: 80 MHz Stock
-//   0xA1: 173.3? MHz?  (Divisor 6)
-//   0xB1: 74.33 MHz?
-//   0xC1: 148.49 MHz?
-//   0xD1: 69.32 MHz?
-//   0xE1: 130 MHz?
-//	 0xF1: 65 MHz.
-//
+//   0x0X: 190ISH MHz (Won't link)	| x5.5*
+//   0x4X: 189.4ISH MHz?			| x5.5*
+//   0x2X: 189.0ISH MHz 			| x5.5*
+//   0x6X: 189.0ISH MHz?			| x5.5*
+//   0x8X: 189.0ISH MHz?			| x5.5*
+//   0xA1: 173.3? MHz?  			| x6
+//   0xC1: 148.49 MHz? 				| x7
+//   0xE1: 130 MHz?					| x8
+//   0x1X: 115.5ISH MHz 			| x9
+//   0x3X: 104.0ISH MHz?			| x10
+//   0x5X: 94.61 MHz?				| x11
+//   0x7X: 86.6ISH MHz?				| x12
+//   0x91: 80 MHz Stock				| x13
+//   0xB1: 74.33 MHz?				| x14
+//   0xD1: 69.32 MHz?				| x15
+//	 0xF1: 65 MHz.					| x16
+
 //Processor requires a hard reboot to link when peripheral bus is operating past 115 MHz (Not sure why)
 //ESP8285, when operating at divisors less than 6 seems to go to close to 5, and will boot, but never reaches 5.
-
-//XXX TODO: Further tuning if we change the 3rd parameter to 4???
 
 extern uint32_t _bss_start;
 extern uint32_t _bss_end;
@@ -56,42 +54,47 @@ void nosdk8266_init() {
 	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
 	ets_update_cpu_frequency(104);
 #elif MAIN_MHZ == 80
-	pico_i2c_writereg(103, 4, 1, 0x88);
-	pico_i2c_writereg(103, 4, 2, 0x91);
+	rom_i2c_writeReg(103, 4, 1, 0x88);
+	rom_i2c_writeReg(103, 4, 2, 0x91);
  	ets_update_cpu_frequency(80);
 #elif MAIN_MHZ == 115
- 	pico_i2c_writereg(103, 4, 1, 0x88);
- 	pico_i2c_writereg(103, 4, 2, 0x11);
+ 	rom_i2c_writeReg(103, 4, 1, 0x88);
+ 	rom_i2c_writeReg(103, 4, 2, 0x11);
  	ets_update_cpu_frequency(80);
 #elif MAIN_MHZ == 160
- 	pico_i2c_writereg(103, 4, 1, 0xc8);
- 	pico_i2c_writereg(103, 4, 2, 0x91);
+ 	rom_i2c_writeReg(103, 4, 1, 0xc8);
+ 	rom_i2c_writeReg(103, 4, 2, 0x91);
  	ets_update_cpu_frequency(80);
 #elif MAIN_MHZ == 173
- 	pico_i2c_writereg(103, 4, 1, 0x88);
- 	pico_i2c_writereg(103, 4, 2, 0xa1);
+ 	rom_i2c_writeReg(103, 4, 1, 0x88);
+ 	rom_i2c_writeReg(103, 4, 2, 0xa1);
  	ets_update_cpu_frequency(80);
 #elif MAIN_MHZ == 189
- 	pico_i2c_writereg(103, 4, 1, 0x88);
- 	pico_i2c_writereg(103, 4, 2, 0x81);
+ 	rom_i2c_writeReg(103, 4, 1, 0x88);
+ 	rom_i2c_writeReg(103, 4, 2, 0x81);
  	ets_update_cpu_frequency(80);
 #elif MAIN_MHZ == 231
- 	pico_i2c_writereg(103, 4, 1, 0x88);
- 	pico_i2c_writereg(103, 4, 2, 0x11);
+ 	rom_i2c_writeReg(103, 4, 1, 0x88);
+ 	rom_i2c_writeReg(103, 4, 2, 0x11);
 	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
 	ets_update_cpu_frequency(160);
 #elif MAIN_MHZ == 320
- 	pico_i2c_writereg(103, 4, 1, 0xc8);
- 	pico_i2c_writereg(103, 4, 2, 0x91);
+ 	rom_i2c_writeReg(103, 4, 1, 0xc8);
+ 	rom_i2c_writeReg(103, 4, 2, 0x91);
 	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
 	ets_update_cpu_frequency(160);
 #elif MAIN_MHZ == 346
- 	pico_i2c_writereg(103, 4, 1, 0x88);
- 	pico_i2c_writereg(103, 4, 2, 0xa1);
+ 	rom_i2c_writeReg(103, 4, 1, 0x88);
+ 	rom_i2c_writeReg(103, 4, 2, 0xa1);
+	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
+	ets_update_cpu_frequency(160);
+#elif MAIN_MHZ == 366
+ 	rom_i2c_writeReg(103, 4, 1, 0x48);
+ 	rom_i2c_writeReg(103, 4, 2, 0x41);
 	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
 	ets_update_cpu_frequency(160);
 #else
-	#error System MHz must be 52, 80, 104, 115, 160, 173, 189, 231, 320 or 346 (for now)
+	#error System MHz must be 52, 80, 104, 115, 160, 173, 189, 231, 320, 346 or 366 (for now)
 #endif
 
 	uint32_t *addr;
@@ -99,7 +102,8 @@ void nosdk8266_init() {
 
 	PIN_PULLUP_DIS(PERIPHS_IO_MUX_U0TXD_U);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);
-	uart_div_modify(0, (PERIPH_FREQ * 1000000) / 115200);
 
+	uart_div_modify(0, (PERIPH_FREQ * 1000000) / 115200);
+	
 	Cache_Read_Enable(0, 0, 1);
 }

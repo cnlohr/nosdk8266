@@ -85,7 +85,7 @@ void InitI2S()
 	//Enable clock to i2s subsystem
 		//From 13 to 93, reconfigure the BBPLL to output i2c_bbpll_en_audio_clock_out
 	//Code was originally: //i2c_writeReg_Mask_def(i2c_bbpll, i2c_bbpll_en_audio_clock_out, 1);
-	pico_i2c_writereg(103,4,4,0x93);
+	rom_i2c_writeReg(103,4,4,0x93);
 
 	//Reset I2S subsystem
 	I2SCONFL = I2S_I2S_RESET_MASK;

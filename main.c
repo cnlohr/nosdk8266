@@ -35,14 +35,22 @@ int main() {
 	printf("Starting I2S Engine (%p)\n", *(void**)0x400040bc);
 	InitI2S();
 
+	//call_delay_us( 3000000 );
+	//int j = 0;
+	//for (j = 0; j < 200; j++) {
+	//	uart_div_modify(0, (j * 1000000) / 115200);
+	//	printf("pllworkingfreq: %d ", j);
+	//}
+
 	while(1) {
 		SLC_INT_CLRL = -1;
 		SendI2S();
 		PIN_OUT_SET = _BV(2); //Turn GPIO2 light off.
-		call_delay_us( 1000000 );
-		printf( "Hello World %d / %d  %p\n", i, isrs, SLC_INT_RAWL );
+		call_delay_us(1000000);
+		printf("Hello World %d / %d  %p\n", i, isrs, SLC_INT_RAWL);
+		//printf("PLL divider register values: (1)0x%x | (2)0x%x\n", rom_i2c_readReg(103, 4, 1), rom_i2c_readReg(103, 4, 2));
 		PIN_OUT_CLEAR = _BV(2); //Turn GPIO2 light off.
-		call_delay_us( 1000000 );
+		call_delay_us(1000000);
 		i++;
 	}
 }
