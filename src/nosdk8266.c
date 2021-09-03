@@ -15,12 +15,6 @@ volatile uint32_t * IOMUX_BASE = (volatile uint32_t *)0x60000800;
 volatile uint32_t * SPI0_BASE = (volatile uint32_t *)0x60000200;
 volatile uint8_t  * RTCRAM = (volatile uint8_t *)0x60001000; //Pointer to RTC Ram (1024 bytes)
 
-#ifdef PICO66
-#define t_ets_update_cpu_frequency(x)
-#else
-#define t_ets_update_cpu_frequency ets_update_cpu_frequency
-#endif
-
 //Thanks, https://github.com/pvvx/esp8266web/blob/2e25559bc489487747205db2ef171d48326b32d4/app/sdklib/system/app_main.c
 static void set_pll(void)
 {
@@ -79,33 +73,25 @@ static void set_pll(void)
 void nosdk8266_clock()
 {
 #if MAIN_MHZ == 52
-	t_ets_update_cpu_frequency( 52 );
+	ets_update_cpu_frequency( 52 );
 #elif MAIN_MHZ == 104
 	DPORT_BASEADDR[0x14/4] |= 0x01; //Overclock bit.
-	t_ets_update_cpu_frequency( 104 );
+	ets_update_cpu_frequency( 104 );
 #elif MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 160 || MAIN_MHZ == 173 || MAIN_MHZ==189
 	//rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL
 	//HWREG(DPORT_BASEADDR,0x14) &= 0x7E; //Regular clock bit.
- 	t_ets_update_cpu_frequency(80);
+ 	ets_update_cpu_frequency(80);
 #elif MAIN_MHZ == 231 || MAIN_MHZ == 346 || MAIN_MHZ==378 || MAIN_MHZ == 320 //Won't boot at 378 MHz.
 	//rom_rfpll_reset();	//Reset PLL.
 	set_pll();			//Set PLL
 	DPORT_BASEADDR[0x14/4] |= 0x01; //Overclock bit.
-	t_ets_update_cpu_frequency(160);
+	ets_update_cpu_frequency(160);
 #else
 	#error System MHz must be 52, 80, 120, 160 or 240
 #endif
 
 }
-
-void nosdk8266_zerobss()
-{
-	uint32_t *addr = &_bss_start;
-	for (addr = &_bss_start; addr < &_bss_end; addr++)  *addr = 0; //Safe, _bss_start doesn't have to == _bss_end
-}
-
-#ifndef PICO66
 
 extern uint32_t _bss_start;
 extern uint32_t _bss_end;
@@ -124,6 +110,3 @@ void nosdk8266_init()
 
 	Cache_Read_Enable(0, 0, 1);
 }
-
-
-#endif

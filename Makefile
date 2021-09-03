@@ -1,22 +1,11 @@
 TARGET_OUT = image.elf
 all : $(TARGET_OUT)
 
-#First, select whether you are targeting PICO or REGULAR.
-#
-#PICO Operates at 52 MHz, and makes no calls to ROM.
-# It's ideal for the HackADay 1kB Challenge.
-# You can also run PICO at 104 MHz but it takes a couple extra bytes to set the overclocking bits.
-#
-#REGULAR Operates at a variety of frequencies and allows for a number of
-# ROM functions.
-
 #SUBMODULE if we are including this in another project.
 SUBMODULE?=NO
 
-BUILD?=REGULAR
 MAIN_MHZ?=320 #Pick from *52, *80, 104 or *115, 160, *173, *189#, 231, 346, 378#  * = peripheral clock at processor clock. # = Mine won't boot + on ESP8285, Clock Lower and unreliable.  Warning. Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why)
 USE_I2S?=YES
-USE_PRINT:=YES
 
 ESP_OPEN_SDK:=~/esp/esp-open-sdk
 
@@ -36,34 +25,15 @@ ADDITIONAL_DEPS?=
 
 ifneq (YES, $(SUBMODULE))
 	SRCPREFIX:=
-	ifeq (REGULAR, $(BUILD))
-		#Non-PIOC66 mode (Regular, 80 MHz, etc.)
-		CFLAGS:=$(CFLAGS) -flto
-		SRCS:=$(SRCS) main.c
-	else ifeq (PICO, $(BUILD))
-		#PICO66 Mode... If you want an absolutely strip down environment (For the HaD 1kB challenge)
-		CFLAGS:=$(CFLAGS) -DPICO66 -flto
-			#TODO: Why can't we use -fwhole-program instead of -flto?
-		SRCS:=$(SRCS) pico.c
-	else
-		ERR:=$(error Need either REGULAR or PICO to be defined to BUILD.  Currently $(BUILD))
-	endif
+	CFLAGS:=$(CFLAGS) -flto
+	SRCS:=$(SRCS) main.c
 else
 	SRCPREFIX:=nosdk8266/
 endif
 
-
 LDFLAGS:=-T $(SRCPREFIX)ld/linkerscript.ld -T $(SRCPREFIX)ld/addresses.ld
 FOLDERPREFIX:=$(GCC_FOLDER)/bin
 PORT:=/dev/ttyS12
-
-
-ifeq (YES, $(USE_PRINT))
-	CFLAGS:=$(CFLAGS)
-else
-	CFLAGS:=$(CFLAGS) -DPICONOPRINT
-endif
-
 
 ifeq (YES, $(USE_I2S))
 	SRCS:=$(SRCS) $(SRCPREFIX)src/nosdki2s.c

@@ -6,9 +6,6 @@
 #include "nosdk8266.h"
 #include "nosdki2s.h"
 
-//This is a little more bloated than PICO66.  It has useful stuff like PRINTF and can call anything in
-//romlib.c 
-
 #define call_delay_us( time ) { asm volatile( "mov.n a2, %0\n_call0 delay4clk" : : "r"(time*(MAIN_MHZ/8)) : "a2" ); }
 
 extern volatile int isrs;
