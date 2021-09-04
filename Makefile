@@ -9,10 +9,8 @@ SUBMODULE?=NO
 MAIN_MHZ?=366
 USE_I2S?=YES
 
-ESP_OPEN_SDK:=~/esp/esp-open-sdk
-
-GCC_FOLDER:=$(ESP_OPEN_SDK)/xtensa-lx106-elf
-ESPTOOL:=$(ESP_OPEN_SDK)/esptool/esptool.py
+ESPTOOL:=~/esp/ESP8266_RTOS_SDK/components/esptool_py/esptool/esptool.py
+GCC_FOLDER:=~/esp/xtensa-lx106-elf
 PREFIX:=$(GCC_FOLDER)/bin/xtensa-lx106-elf-
 SIZE:=$(PREFIX)size
 GCC:=$(PREFIX)gcc
@@ -39,19 +37,19 @@ else ifeq (SUBMODULE, $(USE_I2S))
 endif
 
 #Adding the -g flag makes our assembly easier to read and does not increase size of final executable.
-CFLAGS:=$(CFLAGS) -Ofast -I$(SRCPREFIX)include -nostdlib -DMAIN_MHZ=$(MAIN_MHZ) -mno-serialize-volatile -mlongcalls -g
+CFLAGS:=$(CFLAGS) -Ofast -I$(SRCPREFIX)include -DMAIN_MHZ=$(MAIN_MHZ) -mno-serialize-volatile -mlongcalls -g
 SRCS:=$(SRCS) $(SRCPREFIX)src/startup.S $(SRCPREFIX)src/nosdk8266.c
 
 $(TARGET_OUT) : $(SRCS)
-	$(GCC) $(CFLAGS) $(SRCS)  $(LDFLAGS) -o $@
+	$(GCC) $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@
 	nm -S -n $(TARGET_OUT) > image.map
 	$(SIZE) $@
 	$(PREFIX)objdump -S $@ > image.lst
-	PATH=$(FOLDERPREFIX):$$PATH;$(ESPTOOL) elf2image $(TARGET_OUT) 
+	PATH=$(FOLDERPREFIX):$$PATH;$(ESPTOOL) elf2image $(TARGET_OUT) -o $(TARGET_OUT)-0x00000.bin
 
 burn : $(FW_FILE_1) $(FW_FILE_2) $(TARGET_OUT)
-	($(ESPTOOL) --port $(PORT) write_flash 0x00000 image.elf-0x00000.bin -ff 80m -fm dout)||(true)
+	($(ESPTOOL) --after soft_reset --no-stub --port $(PORT) write_flash 0x00000 $(TARGET_OUT)-0x00000.bin -ff 80m -fm dout)||(true)
 
 clean :
-	rm -rf $(TARGET_OUT) image.map image.lst image.elf-0x10000.bin image.elf-0x00000.bin
+	rm -rf $(TARGET_OUT) image.map image.lst $(TARGET_OUT)-0x10000.bin $(TARGET_OUT)-0x00000.bin
 

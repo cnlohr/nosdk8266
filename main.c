@@ -5,6 +5,7 @@
 #include "ets_sys.h"
 #include "nosdk8266.h"
 #include "nosdki2s.h"
+#include <math.h>
 
 // TODO: Use float number (related to 8) to fix the drift
 #define call_delay_us(time) { asm volatile("mov.n a2, %0\n_call0 delay4clk" : : "r"(time * (MAIN_MHZ / 8)) : "a2" ); }
@@ -47,6 +48,8 @@ int main() {
 		SendI2S();
 		PIN_OUT_SET = _BV(2); //Turn GPIO2 light off.
 		call_delay_us(1000000);
+		//float aa = 12.34;
+		//printf("float test: %f\n", aa);
 		printf("Hello World %d / %d  %p\n", i, isrs, SLC_INT_RAWL);
 		//printf("PLL divider register values: (1)0x%x | (2)0x%x\n", rom_i2c_readReg(103, 4, 1), rom_i2c_readReg(103, 4, 2));
 		PIN_OUT_CLEAR = _BV(2); //Turn GPIO2 light off.
