@@ -48,7 +48,7 @@ $(TARGET_OUT) : $(SRCS)
 	PATH=$(FOLDERPREFIX):$$PATH;$(ESPTOOL) elf2image $(TARGET_OUT) -o $(TARGET_OUT)-0x00000.bin
 
 burn : $(FW_FILE_1) $(FW_FILE_2) $(TARGET_OUT)
-	($(ESPTOOL) --after soft_reset --no-stub --port $(PORT) write_flash 0x00000 $(TARGET_OUT)-0x00000.bin -ff 80m -fm dout)||(true)
+	($(ESPTOOL) --after soft_reset --no-stub --port $(PORT) write_flash 0x00000 $(TARGET_OUT)-0x00000.bin -fm dout)||(true)
 
 clean :
 	rm -rf $(TARGET_OUT) image.map image.lst $(TARGET_OUT)-0x10000.bin $(TARGET_OUT)-0x00000.bin
