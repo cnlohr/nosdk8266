@@ -1,11 +1,11 @@
 #include "c_types.h"
 #include "esp8266_auxrom.h"
-#include "esp8266_rom.h"
+//#include "esp8266_rom.h"
 #include "eagle_soc.h"
-#include "ets_sys.h"
+//#include "ets_sys.h"
 #include "nosdk8266.h"
 #include "nosdki2s.h"
-#include <math.h>
+//#include <math.h>
 
 // TODO: Use float number (related to 8) to fix the drift
 #define call_delay_us(time) { asm volatile("mov.n a2, %0\n_call0 delay4clk" : : "r"(time * (MAIN_MHZ / 8)) : "a2" ); }
@@ -13,9 +13,32 @@
 extern volatile int isrs;
 extern struct sdio_queue i2sBufDesc[2];
 
+int is_prime(unsigned int n) {
+   	if (n <= 1) {
+   		return 0; // zero and one are not prime
+   	}
+   	unsigned int i = 0;
+   	for (i = 2; i * i <= n; i++) {
+       	if (n % i == 0) {
+       		return 0;
+       	}
+    }
+    return 1;
+}  
+
 int main() {
 	int i = 0;
 	nosdk8266_init();
+
+	//int j = 0, primes = 0, p_to_search = 100000;
+	//call_delay_us(5000000);
+	//printf("START\n");
+	//for (j = 0; j <= p_to_search; j++) {
+	//	if (is_prime(j) == 1) {
+	//		primes++;
+	//	}
+	//}
+	//printf("END (%d / %d are prime numbers)", primes, p_to_search);
 
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO2_U,FUNC_GPIO2);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO5_U,FUNC_GPIO5);

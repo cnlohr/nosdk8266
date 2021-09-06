@@ -4,9 +4,9 @@ all : $(TARGET_OUT)
 #SUBMODULE if we are including this in another project.
 SUBMODULE?=NO
 
-#Pick from *52, *80, 104 or *115, 160, *173, *189, 231, 320, 346 or !366 (for now)
-#Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why).  * = peripheral clock at processor clock.  ! = core running at 379MHz, but PLL 183MHz (half of 366MHz).
-MAIN_MHZ?=366
+#Pick from *52, *80, *115, 160, *173, *189, 231, 320 or 346 or (for now)
+#Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why).  * = peripheral clock at processor clock.
+MAIN_MHZ?=346
 USE_I2S?=YES
 
 ESPTOOL:=~/esp/ESP8266_RTOS_SDK/components/esptool_py/esptool/esptool.py
@@ -38,7 +38,7 @@ endif
 
 #Adding the -g flag makes our assembly easier to read and does not increase size of final executable.
 CFLAGS:=$(CFLAGS) -Ofast -I$(SRCPREFIX)include -DMAIN_MHZ=$(MAIN_MHZ) -mno-serialize-volatile -mlongcalls -g
-SRCS:=$(SRCS) $(SRCPREFIX)src/startup.S $(SRCPREFIX)src/nosdk8266.c
+SRCS:=$(SRCS) $(SRCPREFIX)src/delay.S $(SRCPREFIX)src/nosdk8266.c
 
 $(TARGET_OUT) : $(SRCS)
 	$(GCC) $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@

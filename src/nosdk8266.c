@@ -1,8 +1,11 @@
 #include <esp8266_auxrom.h>
-#include <uart_dev.h>
+#include <esp8266_rom.h>
 #include <eagle_soc.h>
 #include <ets_sys.h>
+#include <uart_dev.h>
 #include "nosdk8266.h"
+
+#define ets_update_cpu_frequency(x)
 
 extern UartDevice UartDev;
 
@@ -36,7 +39,7 @@ volatile uint8_t  * RTCRAM = (volatile uint8_t *)0x60001000; //Pointer to RTC Ra
 //   0x3X: 104.0ISH MHz?			| x10
 //   0x5X: 94.61 MHz?				| x11
 //   0x7X: 86.6ISH MHz?				| x12
-//   0x91: 80 MHz Stock				| x13
+//   0x91: 80 MHz Stock				| x13 (default)
 //   0xB1: 74.33 MHz?				| x14
 //   0xD1: 69.32 MHz?				| x15
 //	 0xF1: 65 MHz.					| x16
@@ -50,9 +53,6 @@ extern uint32_t _bss_end;
 void nosdk8266_init() {
 #if MAIN_MHZ == 52
 	ets_update_cpu_frequency(52);
-#elif MAIN_MHZ == 104
-	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
-	ets_update_cpu_frequency(104);
 #elif MAIN_MHZ == 80
 	rom_i2c_writeReg(103, 4, 1, 0x88);
 	rom_i2c_writeReg(103, 4, 2, 0x91);
@@ -88,13 +88,8 @@ void nosdk8266_init() {
  	rom_i2c_writeReg(103, 4, 2, 0xa1);
 	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
 	ets_update_cpu_frequency(160);
-#elif MAIN_MHZ == 366
- 	rom_i2c_writeReg(103, 4, 1, 0x48);
- 	rom_i2c_writeReg(103, 4, 2, 0x41);
-	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
-	ets_update_cpu_frequency(160);
 #else
-	#error System MHz must be 52, 80, 104, 115, 160, 173, 189, 231, 320, 346 or 366 (for now)
+	#error System MHz must be 52, 80, 115, 160, 173, 189, 231, 320 or 346 (for now)
 #endif
 
 	uint32_t *addr;

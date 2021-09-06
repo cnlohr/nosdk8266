@@ -1,12 +1,12 @@
 #ifndef _ROMLIB_H
 #define _ROMLIB_H
 
-#if MAIN_MHZ == 52 || MAIN_MHZ == 80 || MAIN_MHZ == 104 || MAIN_MHZ == 115 || MAIN_MHZ == 160 || MAIN_MHZ == 173 || MAIN_MHZ == 189
+#if MAIN_MHZ == 52 || MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 160 || MAIN_MHZ == 173 || MAIN_MHZ == 189
 	#define PERIPH_FREQ MAIN_MHZ
-#elif MAIN_MHZ == 231 || MAIN_MHZ == 320 || MAIN_MHZ == 346 || MAIN_MHZ == 366
+#elif MAIN_MHZ == 231 || MAIN_MHZ == 320 || MAIN_MHZ == 346
 	#define PERIPH_FREQ MAIN_MHZ / 2
 #else
-	#error System MHz must be 52, 80, 104, 115, 160, 173, 189, 231, 320, 346 or 366 (for now)
+	#error System MHz must be 52, 80, 115, 160, 173, 189, 231, 320 or 346 (for now)
 #endif
 
 extern uint32_t _bss_start;
@@ -20,6 +20,7 @@ extern volatile uint8_t  * RTCRAM; //Pointer to RTC Ram (1024 bytes)
 
 #define HWREG(BASE, OFF) BASE[OFF >> 2]
 
+int ets_uart_printf(const char *fmt, ...);
 void rom_i2c_writeReg(int reg, int hosid, int par, int val); 
 
 //Sets clock frequency, PLL and initializes BSS.
