@@ -1,5 +1,7 @@
 # nosdk8266
 
+First of all, I want to make it clear that even though this project is a fork of nosdk8266, my goal is not to make small images, my goal is to get the maximum speed out of the ESP8266.
+
 There is an awesome little $2 processor called an "ESP8266."  It's the definitive chip that is bringing the internet of things to life. Ever wonder what the ESP8266 can do *without* wifi?  Well, this project is it!  No longer shackled by an SDK that takes up 200 kB of flash, and tons of RAM, you're free to experiment and do so quickly.  Little did we realize how limited the clocks were and just how fast this chip can be once unleashed.
 
 This is a working ESP8266/ESP8285 minimial, non-SDK application.  It can optionally use the ROM functions to deal with I/O, interrupts, printf'ing, etc.
@@ -9,17 +11,50 @@ If you don't need to access FLASH at all after booting, that frees up some of th
 | Desired Frequency | I2S Size (in bytes) | Size, without I2S bus | Remarks | Peripheral Bus Clock | Voids Warranty |
 | ----------------- | ----------------------- | --------------------- | ------- | ----- | -------------- |
 | 52 MHz | Unavailable | 131+0 | No PLL, No overclocking, Default behavior | 52 MHz | N |
-| 104 MHz | Unavailable | 147+0 | No PLL, Overclocking bit set | 52 MHz | ? |
 | 80 MHz | 356+24 | 188+0 | PLL, Normal speed. | 80 MHz | N |
-| 160 MHz | 372+24 | 204+0 | PLL, Normal "overclock" mode | 80 MHz | ? |
 | 115 MHz | 356+24 | 188+0 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
-| 231 MHz | 372+24 | 204+0 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
+| 160 MHz | 372+24 | 204+0 | PLL, Normal "overclock" mode | 80 MHz | ? |
 | 173 MHz | 356+24 | 188+0 | Needs >.2s reset to boot. | 173 MHz | Y |
-| 346 MHz | 372+24 | 204+0 | Needs >.2s reset to boot. | 173 MHz | Y |
 | 189 MHz | 356+24 | 188+0 | Frequently will not boot. | ~189 MHz | **YES** |
-| 378 MHz | 372+24 | 204+0 | Runs slower on ESP8285. | ~189 MHz | **YES** |
+| 231 MHz | 372+24 | 204+0 | Overclock peripheral bus. (Voids warranty, may not work) | 115.5 MHz | Y |
+| 320 MHz | 372+24 | 204+0 | Needs >.2s reset to boot. | 80 MHz | Y |
+| 346 MHz | 372+24 | 204+0 | Needs >.2s reset to boot. | 173 MHz | Y |
 
 Interestingly, you might notice that the way this works is with a 1040 MHz high speed PLL clock and divides from that.  When the clock rate is very high, i.e. 189/378 MHz, the PLL may or may not lock if the processor boots at all.  I found that my clock was wandering around when operating up there.
+
+# Benchmark
+
+To perform this benchmark I used this function, basically what I wanted to measure was the time that the ESP8266 took to define what numbers if the numbers from 0 to 100000 are prime.
+
+I use this function on a for loop:
+
+```
+int is_prime(unsigned int n) {
+   	if (n <= 1) {
+   		return 0; // zero and one are not prime
+   	}
+   	unsigned int i = 0;
+   	for (i = 2; i * i <= n; i++) {
+       	if (n % i == 0) {
+       		return 0;
+       	}
+    }
+    return 1;
+} 
+```
+The result of calculate 100k prime numbers was:
+
+| Frequency | Required Time |
+|-----------|---------------|
+| 52 MHz    | 5055 ms       |
+| 80 MHz    | 3281 ms       |
+| 115 MHz   | 2298 ms       |
+| 160 MHz   | 1634 ms       |
+| 173 MHz   | 1540 ms       |
+| 189 MHz   | 1400 ms       |
+| 231 MHz   | 1170 ms       |
+| 320 MHz   | 841 ms        |
+| 346 MHz   | 750 ms        |
 
 # Prerequisites and Building
 
