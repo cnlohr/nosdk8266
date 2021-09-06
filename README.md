@@ -42,6 +42,8 @@ int is_prime(unsigned int n) {
     return 1;
 } 
 ```
+(ofc all the other code was commented and we was just running this function)
+
 The result of calculate 100k prime numbers was:
 
 | Frequency | Required Time |
