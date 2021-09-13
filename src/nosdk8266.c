@@ -99,6 +99,4 @@ void nosdk8266_init() {
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);
 
 	uart_div_modify(0, (PERIPH_FREQ * 1000000) / 115200);
-	
-	Cache_Read_Enable(0, 0, 1);
 }

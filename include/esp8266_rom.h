@@ -7,12 +7,6 @@
 #include <c_types.h>
 #include "esp8266_auxrom.h"
 
-void Cache_Read_Disable(); //Can't seem to operate...
-void Cache_Read_Enable();
-
-//PROVIDE ( Cache_Read_Disable = 0x400047f0 );
-//PROVIDE ( Cache_Read_Enable = 0x40004678 );
-
 typedef struct {
   uint32_t i[2];
   uint32_t buf[4];
@@ -23,7 +17,6 @@ typedef struct {
 void MD5Init  ( MD5_CTX *mdContext);
 void MD5Update( MD5_CTX *mdContext, const unsigned char *inBuf, unsigned int inLen);
 void MD5Final ( unsigned char hash[], MD5_CTX *mdContext);
-
 
 //SHA Stuff from: https://github.com/pvvx/esp8266web/blob/master/app/include/bios/cha1.h
 #define	SHA1_HASH_LEN	20
@@ -41,10 +34,6 @@ void SHA1Update(SHA1_CTX* context,
 void SHA1Final(uint8 digest[SHA1_HASH_LEN], SHA1_CTX* context);
 void SHA1Transform(uint32 state[5], const uint8 buffer[64]);
 
-
-
-//SPI_FLASH_SEC_SIZE      4096
-
 void SPIEraseSector(uint16 sec);
 void SPIEraseArea(uint32 start,uint32 len); //Doesn't work?
 void SPIEraseBlock(uint16 blk);
@@ -55,39 +44,8 @@ void SPIUnlock( ); //??? I don't use this? -> Seems to crash.
 
 extern SpiFlashChip * flashchip; //don't forget: flashchip->chip_size = 0x01000000;
 
-
-/*
-		flashchip->chip_size = 0x01000000;
-
-	{
-		uint32_t __attribute__ ((aligned (16)))  t[1024];
-		t[0] = 0xAABBCCDD;
-		t[1] = 0xEEFF0011;
-		for( i = 0; i < 10000; i++ ) uart0_sendStr("A\n");
-		SPIEraseSector( 1000000/4096 );
-		for( i = 0; i < 10000; i++ ) uart0_sendStr("B\n");
-		SPIWrite( 1000000, t, 8 );
-	}
-
-		for( i = 0; i < 10000; i++ ) uart0_sendStr("C\n");
-
-	while(1)
-	{
-		char ct[32];
-		uint32_t __attribute__ ((aligned (16)))  ret = 0x12345678;
-//		SPIRead( 1000000, &ret, 4 );
-		ret = *(uint32_t*)(0x40200000+1000004);
-		ets_sprintf( ct, "%08x\n", ret );
-		printf( ct );
-	}
-*/
-
 void system_update_cpu_freq( uint8_t mhz );
 void software_reset();
 void ets_memcpy( void * out, const void *in, int len );
 
-
 #endif
-
-
-

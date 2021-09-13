@@ -7,7 +7,6 @@ SUBMODULE?=NO
 #Pick from *52, *80, *115, 160, *173, *189, 231, 320 or 346 or (for now)
 #Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why).  * = peripheral clock at processor clock.
 MAIN_MHZ?=346
-USE_I2S?=YES
 
 ESPTOOL:=~/esp/ESP8266_RTOS_SDK/components/esptool_py/esptool/esptool.py
 GCC_FOLDER:=~/esp/xtensa-lx106-elf
@@ -28,13 +27,6 @@ endif
 LDFLAGS:=-T $(SRCPREFIX)ld/linkerscript.ld -T $(SRCPREFIX)ld/addresses.ld
 FOLDERPREFIX:=$(GCC_FOLDER)/bin
 PORT:=/dev/ttyS12
-
-ifeq (YES, $(USE_I2S))
-	SRCS:=$(SRCS) $(SRCPREFIX)src/nosdki2s.c
-	CFLAGS:=$(CFLAGS) -DUSE_I2S
-else ifeq (SUBMODULE, $(USE_I2S))
-	CFLAGS:=$(CFLAGS) -DUSE_I2S
-endif
 
 #Adding the -g flag makes our assembly easier to read and does not increase size of final executable.
 CFLAGS:=$(CFLAGS) -Ofast -I$(SRCPREFIX)include -DMAIN_MHZ=$(MAIN_MHZ) -mno-serialize-volatile -mlongcalls -g
