@@ -1,69 +1,30 @@
 #ifndef _ROMLIB_H
 #define _ROMLIB_H
 
-//Useful, more bloated ROM functions.
-
-#if MAIN_MHZ == 52
-	#define PERIPH_FREQ 52
-#elif MAIN_MHZ == 104
-	#define PERIPH_FREQ 52
-#elif MAIN_MHZ == 80
-	#define PERIPH_FREQ 80
-#elif MAIN_MHZ == 115
-	#define PERIPH_FREQ 115
-#elif MAIN_MHZ == 173
-	#define PERIPH_FREQ 173
-#elif MAIN_MHZ == 189
-	#define PERIPH_FREQ 189
-#elif MAIN_MHZ == 160	
-	#define PERIPH_FREQ 160
-#elif MAIN_MHZ == 231
-	#define PERIPH_FREQ 115
-#elif MAIN_MHZ == 320	
-	#define PERIPH_FREQ 160
-#elif MAIN_MHZ == 346
-	#define PERIPH_FREQ 173
-#elif MAIN_MHZ == 378  //Won't boot on my ESP.  PLL@5.5 (how?)
-	#define PERIPH_FREQ 189
+#if MAIN_MHZ == 52 || MAIN_MHZ == 80 || MAIN_MHZ == 115 || MAIN_MHZ == 160 || MAIN_MHZ == 173 || MAIN_MHZ == 189
+	#define PERIPH_FREQ MAIN_MHZ
+#elif MAIN_MHZ == 231 || MAIN_MHZ == 320 || MAIN_MHZ == 346
+	#define PERIPH_FREQ MAIN_MHZ / 2
 #else
-	#error System MHz must be 52, 80, or 160
+	#error System MHz must be 52, 80, 115, 160, 173, 189, 231, 320 or 346 (for now)
 #endif
 
 extern uint32_t _bss_start;
 extern uint32_t _bss_end;
-extern volatile uint32_t * DPORT_BASEADDR;// = (volatile uint32_t *)0x3ff00000;
-extern volatile uint32_t * PIN_BASE; // = (volatile uint32_t *)0x60000300;
-extern volatile uint32_t * IO_BASE;  // = (volatile uint32_t *)0x60000000;
-extern volatile uint32_t * IOMUX_BASE; // = (volatile uint32_t *)0x60000800
-extern volatile uint32_t * SPI0_BASE; // = (volatile uint32_t *)0x60000200;
+extern volatile uint32_t * DPORT_BASEADDR;
+extern volatile uint32_t * PIN_BASE;
+extern volatile uint32_t * IO_BASE;
+extern volatile uint32_t * IOMUX_BASE;
+extern volatile uint32_t * SPI0_BASE;
 extern volatile uint8_t  * RTCRAM; //Pointer to RTC Ram (1024 bytes)
 
-#define HWREG(BASE, OFF)       BASE[OFF>>2]
+#define HWREG(BASE, OFF) BASE[OFF >> 2]
 
-
-#ifdef PICO66
-//#define pico_i2c_writereg( reg, hostid, par, val ) { asm volatile( "_movi a2, " #reg "\n_movi.n a3, " #hostid "\n_movi.n a4, " #par "\nmovi a5, " #val "\n_call0 pico_i2c_writereg_asm" : : : "a2", "a3", "a4", "a5", "a0" ); }  //Doesn't work.
-void pico_i2c_writereg_asm( uint32_t a, uint32_t b);
-#define pico_i2c_writereg( reg, hostid, par, val ) pico_i2c_writereg_asm( (hostid<<2) + 0x60000a00 + 0x300, (reg | (par<<8) | (val<<16) | 0x01000000 ) )
-
-#else
-#define pico_i2c_writereg rom_i2c_writeReg
-void rom_i2c_writeReg( int reg, int hosid, int par, int val ); 
-#endif
-
-#define UART0 0
-
-
-
+int ets_uart_printf(const char *fmt, ...);
+void rom_i2c_writeReg(int reg, int hosid, int par, int val); 
 
 //Sets clock frequency, PLL and initializes BSS.
 void nosdk8266_init();
-
-//For pico, or if all you want is to update the clock, call this.
-void nosdk8266_clock();
-
-//Zero all global, uninitialized RAM
-void nosdk8266_zerobss();
 
 //Configure a GPIO
 //GPIO 0: 		PERIPHS_IO_MUX_GPIO0_U    -- FUNC_GPIO0  or FUNC_SPICS2   or FUNC_CLK_OUT
@@ -84,10 +45,7 @@ void nosdk8266_zerobss();
 //GPIO 15:		PERIPHS_IO_MUX_MTDO_U     -- FUNC_GPIO15 or FUNC_MTDO     or FUNC_I2SO_BCK  or FUNC_HSPI_CS0   or FUNC_U0RTS or FUNC_UART0_RTS
 
 //XXX TODO:  Do we need to worry about "output" here?
-#define nosdk8266_configio( port, FUNC, pd, pu ) \
-	IOMUX_BASE[(port-PERIPHS_IO_MUX)/4] = ((((FUNC&BIT2)<<2)|(FUNC&0x3))<<PERIPHS_IO_MUX_FUNC_S) | (pu<<7) | (pd<<6);
-
-
-
+#define nosdk8266_configio(port, FUNC, pd, pu) \
+	IOMUX_BASE[(port - PERIPHS_IO_MUX) / 4] = ((((FUNC & BIT2) << 2) | (FUNC & 0x3)) << PERIPHS_IO_MUX_FUNC_S) | (pu << 7) | (pd << 6);
 
 #endif

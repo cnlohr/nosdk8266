@@ -14,8 +14,6 @@ typedef struct{
 
 extern SpiFlashChip * flashchip; //don't forget: flashchip->chip_size = 0x01000000;
 
-
-
 void ets_delay_us( uint32_t us );
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,17 +35,10 @@ extern volatile uint32_t * IO_BASE;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifdef PICONOPRINT
-#define ets_putc( c  )
-#define uart_div_modify( u, d )
-#define printf(x...)
-#define putc(c)		
-#else
 void ets_putc( char c );
 void uart_div_modify( int uart, int divisor );
 #define putc ets_putc
 #define printf ets_uart_printf
-#endif
 
 //Part of the romlib
 void romlib_init();
