@@ -23,12 +23,6 @@ int main() {
 	//	printf("pllworkingfreq: %d ", j);
 	//}
 
- 	ets_update_cpu_frequency(80);
- 	rom_i2c_writeReg(103, 4, 1, 0x88);
- 	rom_i2c_writeReg(103, 4, 2, 0xb1);
-	DPORT_BASEADDR[0x14 / 4] |= 0x01; //Overclock bit.
-
-
 	while(1) {
 		PIN_OUT_SET = _BV(2); //Turn GPIO2 light off.
 		call_delay_us(1000000);
