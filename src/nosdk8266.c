@@ -93,7 +93,7 @@ void nosdk8266_init() {
 #endif
 
 	uint32_t *addr;
-    for (addr = &_bss_start; addr < &_bss_end; addr++) { *addr = 0; }
+	for (addr = &_bss_start; addr < &_bss_end; addr++) { *addr = 0; }
 
 	PIN_PULLUP_DIS(PERIPHS_IO_MUX_U0TXD_U);
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_U0TXD_U, FUNC_U0TXD);

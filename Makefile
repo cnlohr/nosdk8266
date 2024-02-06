@@ -1,12 +1,13 @@
-TARGET_OUT = image.elf
-all : $(TARGET_OUT)
+TARGET_OUT ?= image.elf
+
+all : $(TARGET_OUT) burn
 
 #SUBMODULE if we are including this in another project.
 SUBMODULE?=NO
 
 #Pick from *52, *80, *115, 160, *173, *189, 231, 320 or 346 or (for now)
 #Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why).  * = peripheral clock at processor clock.
-MAIN_MHZ?=346
+MAIN_MHZ?=80
 
 ESPUTIL:=~/esp/esputil/esputil
 GCC_FOLDER:=~/esp/xtensa-lx106-elf
@@ -24,6 +25,7 @@ else
 	SRCPREFIX?=nosdk8266/
 endif
 
+
 LDFLAGS:=-T $(SRCPREFIX)ld/linkerscript.ld -T $(SRCPREFIX)ld/addresses.ld
 FOLDERPREFIX:=$(GCC_FOLDER)/bin
 PORT:=/dev/ttyUSB0
@@ -32,12 +34,13 @@ PORT:=/dev/ttyUSB0
 CFLAGS:=$(CFLAGS) -Ofast -I$(SRCPREFIX)include -DMAIN_MHZ=$(MAIN_MHZ) -mno-serialize-volatile -mlongcalls -g
 SRCS:=$(SRCS) $(SRCPREFIX)src/delay.S $(SRCPREFIX)src/nosdk8266.c
 
-$(TARGET_OUT) : $(SRCS)
+$(TARGET_OUT) : $(SRCS) $(DEPS)
 	$(GCC) $(CFLAGS) $(SRCS) $(LDFLAGS) -o $@
 	nm -S -n $(TARGET_OUT) > image.map
 	$(SIZE) $@
 	$(PREFIX)objdump -S $@ > image.lst
 	$(ESPUTIL) mkbinnoext $(TARGET_OUT) $(TARGET_OUT).bin
+	$(BUILDCOUNTCMD)
 
 
 flash : burn

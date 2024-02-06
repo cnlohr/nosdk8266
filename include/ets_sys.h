@@ -34,13 +34,31 @@ typedef struct _ETSTIMER_ {
     void                 *timer_arg;
 } ETSTimer;
 
+void ets_isr_attach( int, void(*)( void * ), void * );
+void ets_isr_unmask( unsigned );
+
+
+// From  https://github.com/espressif/ESP31_RTOS_SDK/blob/master/include/esp32/ets_sys.h --- MAY NOT BE CORRECT OR APPLICABLE.
+
+#define ETS_WMAC_SOURCE          0
+#define ETS_SLC_SOURCE           1
+#define ETS_UART_SOURCE         13
+#define ETS_UART1_SOURCE        14
+#define ETS_FRC_TIMER2_SOURCE   43
+#define ETS_PCNT_SOURCE         19
+#define HW_GPIO_INUM            ETS_PCNT_SOURCE
+
 /* interrupt related */
 #define ETS_SDIO_INUM       1
 #define ETS_SPI_INUM	    2
+#define ETS_RTC_INUM        3
+#define ETS_I2S_INUM        2
 #define ETS_GPIO_INUM       4
 #define ETS_UART_INUM       5
 #define ETS_UART1_INUM      5
 #define ETS_FRC_TIMER1_INUM 9  /* use edge*/
+#define ETS_FRC_TIMER2_INUM 10 /* use edge*/
+#define ETS_WDT_INUM        8  /* use edge*/
 
 #define ETS_INTR_LOCK() \
     ets_intr_lock()

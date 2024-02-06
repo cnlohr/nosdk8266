@@ -66,15 +66,9 @@ SECTIONS
 		*(.rodata.*)
 		*(.gnu.linkonce.r.*)
 		*(.rodata1)
-		*(.dynsbss)
-		*(.sbss)
-		*(.sbss.*)
 		*(.gnu.linkonce.sb.*)
 		*(.scommon)
-		*(.sbss2)
-		*(.sbss2.*)
 		*(.gnu.linkonce.sb2.*)
-		*(.dynbss)
 		*(.data)
 		*(.data.*)
 		. = ALIGN(16); /* Make sure segment is aligned */
@@ -83,8 +77,16 @@ SECTIONS
 	.bss : ALIGN( 4 ) {
 	    _bss_start = ABSOLUTE(.);
 		*(.bss) /* Tricky: BSS needs to be allocated but not sent. GCC Will not populate these for calculating data size */ 
+		*(.dynsbss)
+		*(.sbss)
+		*(.sbss.*)
+		*(.dynbss)
 		*(.bss.*)
+		*(.sbss2)
+		*(.sbss2.*)
 	    _bss_end = ABSOLUTE(.);
+		*(.bssnoinit)
+		*(.bssnoinit.*)
 	} >dram0_0_seg : dram0_0_bss_phdr
 }
 

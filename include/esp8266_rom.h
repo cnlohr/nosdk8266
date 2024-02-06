@@ -48,4 +48,8 @@ void system_update_cpu_freq( uint8_t mhz );
 void software_reset();
 void ets_memcpy( void * out, const void *in, int len );
 
+// Warning: Flash stops working at crazy high requencies.
+void Cache_Read_Enable();
+
+
 #endif
