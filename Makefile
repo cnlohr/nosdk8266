@@ -8,7 +8,7 @@ SUBMODULE?=NO
 #Peripheral clocks of >115 will NOT boot without a full power-down and up. (Don't know why).  * = peripheral clock at processor clock.
 MAIN_MHZ?=346
 
-ESPTOOL:=~/esp/ESP8266_RTOS_SDK/components/esptool_py/esptool/esptool.py
+ESPUTIL:=~/esp/esputil/esputil
 GCC_FOLDER:=~/esp/xtensa-lx106-elf
 PREFIX:=$(GCC_FOLDER)/bin/xtensa-lx106-elf-
 SIZE:=$(PREFIX)size
@@ -26,7 +26,7 @@ endif
 
 LDFLAGS:=-T $(SRCPREFIX)ld/linkerscript.ld -T $(SRCPREFIX)ld/addresses.ld
 FOLDERPREFIX:=$(GCC_FOLDER)/bin
-PORT:=/dev/ttyS12
+PORT:=/dev/ttyUSB0
 
 #Adding the -g flag makes our assembly easier to read and does not increase size of final executable.
 CFLAGS:=$(CFLAGS) -Ofast -I$(SRCPREFIX)include -DMAIN_MHZ=$(MAIN_MHZ) -mno-serialize-volatile -mlongcalls -g
@@ -37,11 +37,17 @@ $(TARGET_OUT) : $(SRCS)
 	nm -S -n $(TARGET_OUT) > image.map
 	$(SIZE) $@
 	$(PREFIX)objdump -S $@ > image.lst
-	PATH=$(FOLDERPREFIX):$$PATH;$(ESPTOOL) elf2image $(TARGET_OUT) -o $(TARGET_OUT)-0x00000.bin
+	$(ESPUTIL) mkbinnoext $(TARGET_OUT) $(TARGET_OUT).bin
 
+
+flash : burn
 burn : $(FW_FILE_1) $(FW_FILE_2) $(TARGET_OUT)
-	($(ESPTOOL) --after soft_reset --no-stub --port $(PORT) write_flash 0x00000 $(TARGET_OUT)-0x00000.bin -fm dout)||(true)
+	$(ESPUTIL) -b 115200 -p $(PORT) flash 0 $(TARGET_OUT).bin
+
+monitor :
+	stty -F $(PORT) 115200 -echo raw
+	cat $(PORT)
 
 clean :
-	rm -rf $(TARGET_OUT) image.map image.lst $(TARGET_OUT)-0x10000.bin $(TARGET_OUT)-0x00000.bin
+	rm -rf $(TARGET_OUT) image.map image.lst $(TARGET_OUT)-0x10000.bin $(TARGET_OUT).bin
 

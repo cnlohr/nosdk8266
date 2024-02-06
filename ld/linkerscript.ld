@@ -10,13 +10,83 @@ MEMORY
 
 PHDRS
 {
-  dport0_0_phdr PT_LOAD;
   dram0_0_phdr PT_LOAD;
   dram0_0_bss_phdr PT_LOAD;
   iram1_0_phdr PT_LOAD;
-  irom0_0_phdr PT_LOAD;
+  dport0_0_phdr PT_NULL;
+  irom0_0_phdr PT_NULL;
 }
 
+ENTRY(sandbox_main)
+SECTIONS
+{
+	. = 0x%08x;
+
+	.text : ALIGN(4) {
+		_stext = .;
+		_text_start = ABSOLUTE(.);
+		*(.UserEnter.text)
+		. = ALIGN(16);
+		*(.DebugExceptionVector.text)
+		. = ALIGN(16);
+		*(.NMIExceptionVector.text)
+		. = ALIGN(16);
+		*(.KernelExceptionVector.text)
+		LONG(0)
+		LONG(0)
+		LONG(0)
+		LONG(0)
+		. = ALIGN(16);
+		*(.UserExceptionVector.text)
+		LONG(0)
+		LONG(0)
+		LONG(0)
+		LONG(0)
+		. = ALIGN(16);
+		*(.DoubleExceptionVector.text)
+		LONG(0)
+		LONG(0)
+		LONG(0)
+		LONG(0)
+		. = ALIGN (16);
+		*(.entry.text)  /*401000a4*/
+
+		*(.init.literal)
+		*(.init)
+		*(.literal .text .literal.* .text.* .stub .gnu.warning .gnu.linkonce.literal.* .gnu.linkonce.t.*.literal .gnu.linkonce.t.* .iram* .iram1 .iram1.*)
+		*(.fini.literal)
+		*(.fini)
+		*(.gnu.version)
+
+		. = ALIGN(16); /* Make sure segment is aligned */
+	} >iram1_0_seg : iram1_0_phdr
+
+	.data : ALIGN(4) {
+		*(.rodata)
+		*(.rodata.*)
+		*(.gnu.linkonce.r.*)
+		*(.rodata1)
+		*(.dynsbss)
+		*(.sbss)
+		*(.sbss.*)
+		*(.gnu.linkonce.sb.*)
+		*(.scommon)
+		*(.sbss2)
+		*(.sbss2.*)
+		*(.gnu.linkonce.sb2.*)
+		*(.dynbss)
+		*(.data)
+		*(.data.*)
+		. = ALIGN(16); /* Make sure segment is aligned */
+	} >dram0_0_seg : dram0_0_phdr
+
+	.bss : ALIGN( 4 ) {
+	    _bss_start = ABSOLUTE(.);
+		*(.bss) /* Tricky: BSS needs to be allocated but not sent. GCC Will not populate these for calculating data size */ 
+		*(.bss.*)
+	    _bss_end = ABSOLUTE(.);
+	} >dram0_0_seg : dram0_0_bss_phdr
+}
 
 /*  Default entry point:  */
 ENTRY(main)
@@ -44,9 +114,10 @@ _memmap_cacheattr_wt_allvalid = 0x22222112;
 _memmap_cacheattr_bp_allvalid = 0x22222222;
 PROVIDE(_memmap_cacheattr_reset = _memmap_cacheattr_wb_trapnull);
 
+
+/*
 SECTIONS
 {
-
   .dport0.rodata : ALIGN(4)
   {
     _dport0_rodata_start = ABSOLUTE(.);
@@ -102,7 +173,6 @@ SECTIONS
     *(.gnu.linkonce.e.*)
     *(.gnu.version_r)
     *(.eh_frame)
-    /*  C++ constructor and destructor tables, properly ordered:  */
     KEEP (*crtbegin.o(.ctors))
     KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
     KEEP (*(SORT(.ctors.*)))
@@ -111,7 +181,6 @@ SECTIONS
     KEEP (*(EXCLUDE_FILE (*crtend.o) .dtors))
     KEEP (*(SORT(.dtors.*)))
     KEEP (*(.dtors))
-    /*  C++ exception handlers table:  */
     __XT_EXCEPTION_DESCS__ = ABSOLUTE(.);
     *(.xt_except_desc)
     *(.gnu.linkonce.h.*)
@@ -119,10 +188,8 @@ SECTIONS
     *(.xt_except_desc_end)
     *(.dynamic)
     *(.gnu.version_d)
-    . = ALIGN(4);		/* this table MUST be 4-byte aligned */
+    . = ALIGN(4);
     _bss_table_start = ABSOLUTE(.);
-    /*LONG(_bss_start)
-    LONG(_bss_end)*/
     _bss_table_end = ABSOLUTE(.);
     _rodata_end = ABSOLUTE(.);
   } >dram0_0_seg :dram0_0_phdr
@@ -147,9 +214,7 @@ SECTIONS
     . = ALIGN (8);
     _bss_end = ABSOLUTE(.);
     _heap_start = ABSOLUTE(.);
-/*    _stack_sentry = ALIGN(0x8); */
   } >dram0_0_seg :dram0_0_bss_phdr
-/* __stack = 0x3ffc8000; */
 
   .irom0.text : ALIGN(4)
   {
@@ -209,4 +274,9 @@ SECTIONS
     _lit4_end = ABSOLUTE(.);
   } >iram1_0_seg :iram1_0_phdr
 }
+
+*/
+
+
+
 
