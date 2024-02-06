@@ -85,20 +85,31 @@ The result of calculate 100k prime numbers was:
 
 # Prerequisites and Building
 
-You'll need the xtensa compiler and a copy of esptool.py.
+You'll need the xtensa compiler and a copy of esputil
 
-See https://github.com/espressif/esptool/releases/ for the last release of esptool.py
+Get and install esputil, my version of cpq's dependency-free, C esptool, so we don't need python.
+```c
+mkdir ~/esp
+cd ~/esp
+git clone https://github.com/cnlohr/esputil
+cd esputil
+make
+```
+
 and https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/linux-setup.html for xtensa-lx106 compiler
 (Remember that you just need the compiler, so just download and uncompress the compressed file depending on your system and edit the makefile)
 
 I strongly recommend using a Linux system.  Follow the information on Espressif docs site for more details and lists of Linux package prerequisites.
+
+NOTE: On some linux systems, brltty may take over unnamed serial ports and make your day awful.  Uninstall it. `apt purge brltty pop-desktop`
+
 
 ## Altering the Makefile
 
 The makefile has some defaults, however, you will likely need to modify the ESP_OPEN_SDK parameter to compile on your system, so they point to your esp open sdk.
 
 ```
-ESPTOOL:=/.../esptool.py
+ESPUTIL:=/.../esputil
 GCC_FOLDER:=/.../xtensa-lx106-elf
 ```
 
