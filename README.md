@@ -22,66 +22,9 @@ If you don't need to access FLASH at all after booting, that frees up some of th
 
 Interestingly, you might notice that the way this works is with a 1040 MHz high speed PLL clock and divides from that.  When the clock rate is very high, i.e. 189/378 MHz, the PLL may or may not lock if the processor boots at all.  I found that my clock was wandering around when operating up there.
 
-# PLL Valid Values
+# Example project
 
-This table represents each possible value for the function rom_i2c_writeReg (103, 4, 1, 0xVAL), (you need replace "VAL" with the desired register, for example if in "VAL" you put 0xF9, you should expect the PLL running at 52 MHz)
-"ERR" means that the ESP8266 won't boot
-All frequencies are in MHz.
-
-| | 0  | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | A   | B   | C   | D   | E   | F   |
-|-| -- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-|0| 45 | 45  | 45  | 45  | 45  | 45  | 45  | 46  | 45  | 46  | 45  | 46  | 45  | 46  | 46  | 45  |
-|1| 46 | 46  | 46  | 46  | 45  | 45  | 45  | 46  | 45  | 46  | 46  | 46  | 46  | 45  | 46  | 45  |
-|2| 46 | 46  | 46  | 45  | 45  | 45  | 45  | 46  | 45  | 45  | 45  | 46  | 45  | 46  | 45  | 46  |
-|3| 46 | 46  | 46  | 45  | 46  | 44  | 46  | 45  | 46  | 46  | 45  | 46  | 45  | 42  | 41  | 39  |
-|4| 92 | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  |
-|5| 92 | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  |
-|6| 46 | 92  | 92  | 92  | 92  | 92  | 92  | 91  | 90  | 92  | 92  | 93  | 91  | 86  | 82  | 78  |
-|7| 92 | 89  | 84  | 76  | 73  | 68  | 64  | 59  | 57  | 50  | 51  | 48  | 46  | 43  | 42  | 39  |
-|8| 45 | 184 | 183 | 183 | 183 | 184 | 184 | 183 | 184 | 183 | 183 | 184 | 183 | 183 | 183 | 184 |
-|9| 45 | 184 | 183 | 184 | 183 | 183 | 183 | 183 | 183 | 184 | 184 | 184 | 184 | 184 | 184 | 184 |
-|A| 46 | 178 | 170 | 155 | 147 | 136 | 129 | 120 | 114 | 106 | 102 | 95  | 91  | 86  | 83  | 78  |
-|B| 46 | 89  | 85  | 78  | 74  | 68  | 65  | 60  | 58  | 54  | 51  | 48  | 46  | 43  | 42  | 40  |
-|C| 46 | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR |
-|D| 46 | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR |
-|E| 45 | 176 | 167 | 153 | 145 | 134 | 127 | 118 | 112 | 105 | 100 | 94  | 90  | 85  | 81  | 77  |
-|F| 48 | 88  | 84  | 77  | 73  | 67  | 64  | 59  | 56  | 52  | 50  | 47  | 45  | 42  | 41  | 38  |
-
-# Benchmark
-
-To perform this benchmark I used this function, basically what I wanted to measure was the time that the ESP8266 took to define what numbers if the numbers from 0 to 100000 are prime.
-
-I use this function on a for loop:
-
-```
-int is_prime(unsigned int n) {
-   	if (n <= 1) {
-   		return 0; // zero and one are not prime
-   	}
-   	unsigned int i = 0;
-   	for (i = 2; i * i <= n; i++) {
-       	if (n % i == 0) {
-       		return 0;
-       	}
-    }
-    return 1;
-} 
-```
-(ofc all the other code was commented and we was just running this function)
-
-The result of calculate 100k prime numbers was:
-
-| Frequency | Required Time |
-| --------- | ------------- |
-| 52 MHz | 5055 ms |
-| 80 MHz | 3281 ms |
-| 115 MHz | 2298 ms |
-| 160 MHz | 1634 ms |
-| 173 MHz | 1540 ms |
-| 189 MHz | 1400 ms |
-| 231 MHz | 1170 ms |
-| 320 MHz | 841 ms |
-| 346 MHz | 750 ms |
+You can see some examples here: https://github.com/cnlohr/nosdk8266_example
 
 # Prerequisites and Building
 
@@ -148,3 +91,68 @@ I'm sure there's more...
 * Add Sleep feature.
 
 * Figure out why power consumption is higher than I would expect.
+
+
+# Ancient notes
+
+# PLL Valid Values
+
+This table represents each possible value for the function rom_i2c_writeReg (103, 4, 1, 0xVAL), (you need replace "VAL" with the desired register, for example if in "VAL" you put 0xF9, you should expect the PLL running at 52 MHz)
+"ERR" means that the ESP8266 won't boot
+All frequencies are in MHz.
+
+| | 0  | 1   | 2   | 3   | 4   | 5   | 6   | 7   | 8   | 9   | A   | B   | C   | D   | E   | F   |
+|-| -- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+|0| 45 | 45  | 45  | 45  | 45  | 45  | 45  | 46  | 45  | 46  | 45  | 46  | 45  | 46  | 46  | 45  |
+|1| 46 | 46  | 46  | 46  | 45  | 45  | 45  | 46  | 45  | 46  | 46  | 46  | 46  | 45  | 46  | 45  |
+|2| 46 | 46  | 46  | 45  | 45  | 45  | 45  | 46  | 45  | 45  | 45  | 46  | 45  | 46  | 45  | 46  |
+|3| 46 | 46  | 46  | 45  | 46  | 44  | 46  | 45  | 46  | 46  | 45  | 46  | 45  | 42  | 41  | 39  |
+|4| 92 | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  |
+|5| 92 | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  | 92  |
+|6| 46 | 92  | 92  | 92  | 92  | 92  | 92  | 91  | 90  | 92  | 92  | 93  | 91  | 86  | 82  | 78  |
+|7| 92 | 89  | 84  | 76  | 73  | 68  | 64  | 59  | 57  | 50  | 51  | 48  | 46  | 43  | 42  | 39  |
+|8| 45 | 184 | 183 | 183 | 183 | 184 | 184 | 183 | 184 | 183 | 183 | 184 | 183 | 183 | 183 | 184 |
+|9| 45 | 184 | 183 | 184 | 183 | 183 | 183 | 183 | 183 | 184 | 184 | 184 | 184 | 184 | 184 | 184 |
+|A| 46 | 178 | 170 | 155 | 147 | 136 | 129 | 120 | 114 | 106 | 102 | 95  | 91  | 86  | 83  | 78  |
+|B| 46 | 89  | 85  | 78  | 74  | 68  | 65  | 60  | 58  | 54  | 51  | 48  | 46  | 43  | 42  | 40  |
+|C| 46 | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR |
+|D| 46 | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR | ERR |
+|E| 45 | 176 | 167 | 153 | 145 | 134 | 127 | 118 | 112 | 105 | 100 | 94  | 90  | 85  | 81  | 77  |
+|F| 48 | 88  | 84  | 77  | 73  | 67  | 64  | 59  | 56  | 52  | 50  | 47  | 45  | 42  | 41  | 38  |
+
+# Benchmark
+
+To perform this benchmark I used this function, basically what I wanted to measure was the time that the ESP8266 took to define what numbers if the numbers from 0 to 100000 are prime.
+
+I use this function on a for loop:
+
+```
+int is_prime(unsigned int n) {
+   	if (n <= 1) {
+   		return 0; // zero and one are not prime
+   	}
+   	unsigned int i = 0;
+   	for (i = 2; i * i <= n; i++) {
+       	if (n % i == 0) {
+       		return 0;
+       	}
+    }
+    return 1;
+} 
+```
+(ofc all the other code was commented and we was just running this function)
+
+The result of calculate 100k prime numbers was:
+
+| Frequency | Required Time |
+| --------- | ------------- |
+| 52 MHz | 5055 ms |
+| 80 MHz | 3281 ms |
+| 115 MHz | 2298 ms |
+| 160 MHz | 1634 ms |
+| 173 MHz | 1540 ms |
+| 189 MHz | 1400 ms |
+| 231 MHz | 1170 ms |
+| 320 MHz | 841 ms |
+| 346 MHz | 750 ms |
+
