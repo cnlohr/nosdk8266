@@ -51,3 +51,6 @@ monitor :
 clean :
 	rm -rf $(TARGET_OUT) image.map image.lst $(TARGET_OUT)-0x10000.bin $(TARGET_OUT).bin
 
+# Simulate in qemu-xtensa: git@github.com:gschorcht/qemu-xtensa.git
+qemulate:
+	qemu-system-xtensa -M esp8266 -nographic -serial stdio -monitor none -kernel $(TARGET_OUT)-0x00000.bin
