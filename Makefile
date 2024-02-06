@@ -21,7 +21,7 @@ ifneq (YES, $(SUBMODULE))
 	CFLAGS:=$(CFLAGS) -flto
 	SRCS:=$(SRCS) main.c
 else
-	SRCPREFIX:=nosdk8266/
+	SRCPREFIX?=nosdk8266/
 endif
 
 LDFLAGS:=-T $(SRCPREFIX)ld/linkerscript.ld -T $(SRCPREFIX)ld/addresses.ld
