@@ -1,6 +1,6 @@
 # nosdk8266
 
-First of all, I want to make it clear that even though this project is a fork of nosdk8266, my goal is not to make small images, my goal is to get the maximum speed out of the ESP8266.
+If you don't need wifi on your ESP8266 and want to use it as a microcontroller to use its unbridled power, and spend only a second in your build cycles, this might be the project for you.
 
 There is an awesome little $2 processor called an "ESP8266."  It's the definitive chip that is bringing the internet of things to life. Ever wonder what the ESP8266 can do *without* wifi?  Well, this project is it!  No longer shackled by an SDK that takes up 200 kB of flash, and tons of RAM, you're free to experiment and do so quickly.  Little did we realize how limited the clocks were and just how fast this chip can be once unleashed.
 
