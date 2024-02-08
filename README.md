@@ -37,9 +37,13 @@ cd ~/esp
 git clone https://github.com/cnlohr/esputil
 cd esputil
 make
+
+cd ~/esp
+wget https://dl.espressif.com/dl/xtensa-lx106-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz
+tar xzvpf xtensa-lx106-elf-gcc8_4_0-esp-2020r3-linux-amd64.tar.gz
 ```
 
-and https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/linux-setup.html for xtensa-lx106 compiler
+The second instructions from https://docs.espressif.com/projects/esp8266-rtos-sdk/en/latest/get-started/linux-setup.html for xtensa-lx106 compiler
 (Remember that you just need the compiler, so just download and uncompress the compressed file depending on your system and edit the makefile)
 
 I strongly recommend using a Linux system.  Follow the information on Espressif docs site for more details and lists of Linux package prerequisites.
